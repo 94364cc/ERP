@@ -55,8 +55,6 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findByIdWithBarCode(@Param("meId") Long meId);
 
-    List<MaterialVoSearch> getMaterialByParam(@Param("materialParam") String materialParam);
-
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
                                                   @Param("q") String q,
                                                   @Param("enableSerialNumber") String enableSerialNumber,
@@ -68,20 +66,6 @@ public interface MaterialMapperEx {
                                      @Param("q") String q,
                                      @Param("enableSerialNumber") String enableSerialNumber,
                                      @Param("enableBatchNumber") String enableBatchNumber);
-
-    List<MaterialVo4Unit> exportExcel(
-            @Param("materialParam") String materialParam,
-            @Param("color") String color,
-            @Param("materialOther") String materialOther,
-            @Param("weight") String weight,
-            @Param("expiryNum") String expiryNum,
-            @Param("enabled") String enabled,
-            @Param("enableSerialNumber") String enableSerialNumber,
-            @Param("enableBatchNumber") String enableBatchNumber,
-            @Param("remark") String remark,
-            @Param("idList") List<Long> idList);
-
-    List<MaterialExtend> getOtherMaterialList();
 
     /**
      * 通过商品名称查询商品信息
@@ -150,15 +134,7 @@ public interface MaterialMapperEx {
             @Param("id") Long id,
             @Param("name") String name,
             @Param("model") String model,
-            @Param("color") String color,
             @Param("standard") String standard,
-            @Param("mfrs") String mfrs,
-            @Param("otherField1") String otherField1,
-            @Param("otherField2") String otherField2,
-            @Param("otherField3") String otherField3,
-            @Param("unit") String unit,
             @Param("unitId") Long unitId);
 
-    MaterialExtend getMaterialExtendBySerialNumber(
-            @Param("serialNumber") String serialNumber);
 }

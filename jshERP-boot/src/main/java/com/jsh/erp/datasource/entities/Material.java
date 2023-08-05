@@ -9,16 +9,13 @@ public class Material {
     @ApiModelProperty(value = "主键ID")
     private Long id;
 
-    @ApiModelProperty(value = "分类id")
-    private Long categoryId;
-
     @ApiModelProperty(value = "商品名称")
     private String name;
 
     @ApiModelProperty(value = "款号")
     private String model;
 
-    @ApiModelProperty(value = "单位体积")
+    @ApiModelProperty(value = "单位体积，单位立方米")
     private String standard;
 
     @ApiModelProperty(value = "单位id")
