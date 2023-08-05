@@ -59,9 +59,6 @@ public class UserController {
     private TenantService tenantService;
 
     @Resource
-    private LogService logService;
-
-    @Resource
     private RedisService redisService;
 
     private static String SUCCESS = "操作成功";
@@ -85,30 +82,6 @@ public class UserController {
         return res;
     }
 
-    @PostMapping(value = "/weixinLogin")
-    @ApiOperation(value = "微信登录")
-    public BaseResponseInfo weixinLogin(@RequestBody JSONObject jsonObject,
-                                  HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            String weixinCode = jsonObject.getString("weixinCode");
-            User user = userService.getUserByWeixinCode(weixinCode);
-            if(user == null) {
-                res.code = 501;
-                res.data = "微信未绑定";
-            } else {
-                Map<String, Object> data = userService.login(user, request);
-                res.code = 200;
-                res.data = data;
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            res.code = 500;
-            res.data = "用户登录失败";
-        }
-        return res;
-    }
 
     @GetMapping(value = "/getUserSession")
     @ApiOperation(value = "获取用户信息")
@@ -315,7 +288,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/getOrganizationUserTree")
+    @GetMapping("/getOrganizationUserTree")
     @ApiOperation(value = "获取机构用户树")
     public JSONArray getOrganizationUserTree()throws Exception{
         JSONArray arr=new JSONArray();

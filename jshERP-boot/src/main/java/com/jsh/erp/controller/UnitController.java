@@ -60,9 +60,9 @@ public class UnitController {
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/add")
+    @PostMapping(value = "/add")
     @ApiOperation(value = "新增单位")
-    public BaseResponseInfo insertUnit(JSONObject obj,HttpServletRequest request) throws Exception{
+    public BaseResponseInfo insertUnit(@RequestBody JSONObject obj,HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             int result = unitService.insertUnit(obj,request);
@@ -85,7 +85,7 @@ public class UnitController {
      */
     @PutMapping(value = "/update")
     @ApiOperation(value = "更新单位")
-    public BaseResponseInfo updateUnit(JSONObject obj,HttpServletRequest request) throws Exception{
+    public BaseResponseInfo updateUnit(@RequestBody JSONObject obj,HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             int result = unitService.updateUnit(obj,request);
@@ -131,7 +131,7 @@ public class UnitController {
      */
     @DeleteMapping(value = "/deleteBatch")
     @ApiOperation(value = "批量删除单位列表")
-    public BaseResponseInfo batchDeleteUnit(String ids,HttpServletRequest request) throws Exception{
+    public BaseResponseInfo batchDeleteUnit(@RequestBody String ids,HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             int result = unitService.batchDeleteUnit(ids,request);

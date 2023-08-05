@@ -24,7 +24,7 @@ public class Material {
     @ApiModelProperty(value = "单位id")
     private Long unitId;
 
-    @ApiModelProperty(value = "描述")
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     @ApiModelProperty(value = "租户，暂时没用")
