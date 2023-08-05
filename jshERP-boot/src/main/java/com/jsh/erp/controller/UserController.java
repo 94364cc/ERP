@@ -110,22 +110,6 @@ public class UserController {
         return res;
     }
 
-    @PostMapping(value = "/weixinBind")
-    @ApiOperation(value = "绑定微信")
-    public String weixinBind(@RequestBody JSONObject jsonObject,
-                             HttpServletRequest request)throws Exception {
-        Map<String, Object> objectMap = new HashMap<>();
-        String loginName = jsonObject.getString("loginName");
-        String password = jsonObject.getString("password");
-        String weixinCode = jsonObject.getString("weixinCode");
-        int res = userService.weixinBind(loginName, password, weixinCode);
-        if(res > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
-    }
-
     @GetMapping(value = "/getUserSession")
     @ApiOperation(value = "获取用户信息")
     public BaseResponseInfo getSessionUser(HttpServletRequest request)throws Exception {

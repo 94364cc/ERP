@@ -1299,9 +1299,6 @@ public class MaterialService {
         String bigUnitStock = "";
         if(null!= unitId) {
             Unit unit = unitService.getUnit(unitId);
-            if(unit.getRatio()!=null && unit.getRatio().compareTo(BigDecimal.ZERO)!=0 && stock!=null) {
-                bigUnitStock = stock.divide(unit.getRatio(),2,BigDecimal.ROUND_HALF_UP) + unit.getOtherUnit();
-            }
         }
         return bigUnitStock;
     }

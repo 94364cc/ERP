@@ -105,8 +105,6 @@ public class UnitService {
         Unit unit = JSONObject.parseObject(obj.toJSONString(), Unit.class);
         int result=0;
         try{
-            parseNameByUnit(unit);
-            unit.setEnabled(true);
             result=unitMapper.insertSelective(unit);
             logService.insertLog("计量单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getName()).toString(), request);
@@ -121,35 +119,13 @@ public class UnitService {
         Unit unit = JSONObject.parseObject(obj.toJSONString(), Unit.class);
         int result=0;
         try{
-            parseNameByUnit(unit);
             result=unitMapper.updateByPrimaryKeySelective(unit);
-            if(unit.getRatioTwo()==null) {
-                unitMapperEx.updateRatioTwoById(unit.getId());
-            }
-            if(unit.getRatioThree()==null) {
-                unitMapperEx.updateRatioThreeById(unit.getId());
-            }
             logService.insertLog("计量单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;
-    }
-
-    /**
-     * 根据单位信息生成名称的格式
-     * @param unit
-     */
-    private void parseNameByUnit(Unit unit) {
-        String unitName = unit.getBasicUnit() + "/" + "(" +  unit.getOtherUnit() + "=" + unit.getRatio().toString() + unit.getBasicUnit() + ")";
-        if(StringUtil.isNotEmpty(unit.getOtherUnitTwo()) && unit.getRatioTwo()!=null) {
-            unitName += "/" + "(" + unit.getOtherUnitTwo() + "=" + unit.getRatioTwo().toString() + unit.getBasicUnit() + ")";
-            if(StringUtil.isNotEmpty(unit.getOtherUnitThree()) && unit.getRatioThree()!=null) {
-                unitName += "/" + "(" + unit.getOtherUnitThree() + "=" + unit.getRatioThree().toString() + unit.getBasicUnit() + ")";
-            }
-        }
-        unit.setName(unitName);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -229,26 +205,6 @@ public class UnitService {
         return unitId;
     }
 
-    /**
-     * 根据多单位的比例进行库存换算（保留两位小数）
-     * @param stock
-     * @param unitInfo
-     * @param materialUnit
-     * @return
-     */
-    public BigDecimal parseStockByUnit(BigDecimal stock, Unit unitInfo, String materialUnit) {
-        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
-            stock = stock.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo()!=null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO)!=0) {
-            stock = stock.divide(unitInfo.getRatioTwo(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree()!=null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO)!=0) {
-            stock = stock.divide(unitInfo.getRatioThree(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        return stock;
-    }
-
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(Boolean status, String ids)throws Exception {
         logService.insertLog("计量单位",
@@ -256,7 +212,6 @@ public class UnitService {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> unitIds = StringUtil.strToLongList(ids);
         Unit unit = new Unit();
-        unit.setEnabled(status);
         UnitExample example = new UnitExample();
         example.createCriteria().andIdIn(unitIds);
         int result=0;

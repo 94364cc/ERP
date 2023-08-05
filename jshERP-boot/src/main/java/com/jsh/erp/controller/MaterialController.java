@@ -230,15 +230,6 @@ public class MaterialController {
                         if(commodityUnit.equals(unit.getBasicUnit())) {
                             ratioStr = "[基本]";
                         }
-                        if(commodityUnit.equals(unit.getOtherUnit()) && unit.getRatio()!=null) {
-                            ratioStr = "[" + unit.getRatio().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
-                        }
-                        if(commodityUnit.equals(unit.getOtherUnitTwo()) && unit.getRatioTwo()!=null) {
-                            ratioStr = "[" + unit.getRatioTwo().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
-                        }
-                        if(commodityUnit.equals(unit.getOtherUnitThree()) && unit.getRatioThree()!=null) {
-                            ratioStr = "[" + unit.getRatioThree().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
-                        }
                     }
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
@@ -255,10 +246,6 @@ public class MaterialController {
                         stock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
                     } else {
                         stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
-                        if (material.getUnitId()!=null){
-                            String commodityUnit = material.getCommodityUnit();
-                            stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
-                        }
                     }
                     item.put("stock", stock);
                     item.put("expand", materialService.getMaterialOtherByParam(mpArr, material));
@@ -536,11 +523,6 @@ public class MaterialController {
             stock = depotItemService.getSkuStockByParam(mvo.getDepotId(), mvo.getMeId(), null, null);
         } else {
             stock = depotItemService.getStockByParam(mvo.getDepotId(), mvo.getId(), null, null);
-            if (mvo.getUnitId() != null) {
-                Unit unit = unitService.getUnit(mvo.getUnitId());
-                String commodityUnit = mvo.getCommodityUnit();
-                stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
-            }
         }
         mvo.setStock(stock);
     }
