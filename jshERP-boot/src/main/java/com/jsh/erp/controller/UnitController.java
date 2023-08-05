@@ -20,7 +20,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 /**
  * Description
  *
- * @Author: qiankunpingtai
+ * @Author: zhengchenchen
  * @Date: 2019/4/1 15:38
  */
 @RestController
@@ -53,24 +53,95 @@ public class UnitController {
         return res;
     }
 
+
     /**
-     * 批量设置状态-启用或者禁用
-     * @param jsonObject
+     * 单位列表
      * @param request
      * @return
+     * @throws Exception
      */
-    @PostMapping(value = "/batchSetStatus")
-    @ApiOperation(value = "批量设置状态")
-    public String batchSetStatus(@RequestBody JSONObject jsonObject,
-                                 HttpServletRequest request)throws Exception {
-        Boolean status = jsonObject.getBoolean("status");
-        String ids = jsonObject.getString("ids");
-        Map<String, Object> objectMap = new HashMap<>();
-        int res = unitService.batchSetStatus(status, ids);
-        if(res > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+    @GetMapping(value = "/add")
+    @ApiOperation(value = "新增单位")
+    public BaseResponseInfo insertUnit(JSONObject obj,HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            int result = unitService.insertUnit(obj,request);
+            res.code = 200;
+            res.data = result;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "新增单位失败";
         }
+        return res;
+    }
+
+
+    /**
+     * 更新单位列表
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "更新单位")
+    public BaseResponseInfo updateUnit(JSONObject obj,HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            int result = unitService.updateUnit(obj,request);
+            res.code = 200;
+            res.data = result;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "更新单位失败";
+        }
+        return res;
+    }
+
+
+    /**
+     * 删除单位列表
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除单位列表")
+    public BaseResponseInfo deleteUnit(Long id, HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            int result = unitService.deleteUnit(id,request);
+            res.code = 200;
+            res.data = result;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "删除单位失败";
+        }
+        return res;
+    }
+
+
+    /**
+     * 批量删除单位列表
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除单位列表")
+    public BaseResponseInfo batchDeleteUnit(String ids,HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            int result = unitService.batchDeleteUnit(ids,request);
+            res.code = 200;
+            res.data = result;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "批量删除单位失败";
+        }
+        return res;
     }
 }

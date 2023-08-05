@@ -3,7 +3,7 @@ package com.jsh.erp.datasource.vo;
 /**
  * Description
  *
- * @Author: qiankunpingtai
+ * @Author: zhengchenchen
  * @Date: 2019/3/13 18:11
  */
 public class NodeAttributes {

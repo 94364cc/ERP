@@ -556,7 +556,7 @@ public class UserService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public UserEx registerUser(UserEx ue, Integer manageRoleId, HttpServletRequest request) throws Exception{
         /**
-         * create by: qiankunpingtai
+         * create by: zhengchenchen
          * create time: 2019/4/9 18:00
          * 多次创建事务，事物之间无法协同，应该在入口处创建一个事务以做协调
          */

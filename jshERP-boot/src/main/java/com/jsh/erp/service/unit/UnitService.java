@@ -107,7 +107,7 @@ public class UnitService {
         try{
             result=unitMapper.insertSelective(unit);
             logService.insertLog("计量单位",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getName()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getBasicUnit()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -121,7 +121,7 @@ public class UnitService {
         try{
             result=unitMapper.updateByPrimaryKeySelective(unit);
             logService.insertLog("计量单位",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getName()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getBasicUnit()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -160,7 +160,7 @@ public class UnitService {
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<Unit> list = getUnitListByIds(ids);
         for(Unit unit: list){
-            sb.append("[").append(unit.getName()).append("]");
+            sb.append("[").append(unit.getBasicUnit()).append("]");
         }
         logService.insertLog("计量单位", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -203,23 +203,5 @@ public class UnitService {
             unitId = list.get(0).getId();
         }
         return unitId;
-    }
-
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetStatus(Boolean status, String ids)throws Exception {
-        logService.insertLog("计量单位",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ENABLED).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        List<Long> unitIds = StringUtil.strToLongList(ids);
-        Unit unit = new Unit();
-        UnitExample example = new UnitExample();
-        example.createCriteria().andIdIn(unitIds);
-        int result=0;
-        try{
-            result = unitMapper.updateByExampleSelective(unit, example);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
     }
 }

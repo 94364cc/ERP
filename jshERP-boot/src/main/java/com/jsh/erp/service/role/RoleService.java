@@ -172,7 +172,7 @@ public class RoleService {
         return list;
     }
     /**
-     * create by: qiankunpingtai
+     * create by: zhengchenchen
      *  逻辑删除角色信息
      * create time: 2019/3/28 15:44
      * @Param: ids

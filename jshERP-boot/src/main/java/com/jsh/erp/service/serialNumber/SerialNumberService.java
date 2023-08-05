@@ -150,7 +150,7 @@ public class SerialNumberService {
     }
 
     /**
-     * create by: qiankunpingtai
+     * create by: zhengchenchen
      *  逻辑删除序列号信息
      * create time: 2019/3/27 17:43
      * @Param: ids
