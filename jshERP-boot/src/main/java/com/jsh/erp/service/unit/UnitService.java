@@ -70,7 +70,7 @@ public class UnitService {
 
     public List<Unit> getUnit()throws Exception {
         UnitExample example = new UnitExample();
-        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Unit> list=null;
         try{
             list=unitMapper.selectByExample(example);

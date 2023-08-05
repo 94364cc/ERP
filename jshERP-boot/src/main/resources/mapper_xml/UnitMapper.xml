@@ -66,8 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, basic_unit, other_unit, other_unit_two, other_unit_three, ratio, ratio_two, 
-    ratio_three, enabled, tenant_id, delete_flag
+    id,  basic_unit,tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.UnitExample" resultMap="BaseResultMap">
     select
@@ -100,15 +99,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Unit">
-    insert into jsh_unit (id, name, basic_unit, 
-      other_unit, other_unit_two, other_unit_three, 
-      ratio, ratio_two, ratio_three, 
-      enabled, tenant_id, delete_flag
+    insert into jsh_unit (id, basic_unit,tenant_id, delete_flag
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{basicUnit,jdbcType=VARCHAR}, 
-      #{otherUnit,jdbcType=VARCHAR}, #{otherUnitTwo,jdbcType=VARCHAR}, #{otherUnitThree,jdbcType=VARCHAR}, 
-      #{ratio,jdbcType=DECIMAL}, #{ratioTwo,jdbcType=DECIMAL}, #{ratioThree,jdbcType=DECIMAL}, 
-      #{enabled,jdbcType=BIT}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+    values (#{id,jdbcType=BIGINT}, #{basicUnit,jdbcType=VARCHAR},
+     #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Unit">
@@ -154,32 +148,8 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.name != null">
-        name = #{record.name,jdbcType=VARCHAR},
-      </if>
       <if test="record.basicUnit != null">
         basic_unit = #{record.basicUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherUnit != null">
-        other_unit = #{record.otherUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherUnitTwo != null">
-        other_unit_two = #{record.otherUnitTwo,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherUnitThree != null">
-        other_unit_three = #{record.otherUnitThree,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ratio != null">
-        ratio = #{record.ratio,jdbcType=DECIMAL},
-      </if>
-      <if test="record.ratioTwo != null">
-        ratio_two = #{record.ratioTwo,jdbcType=DECIMAL},
-      </if>
-      <if test="record.ratioThree != null">
-        ratio_three = #{record.ratioThree,jdbcType=DECIMAL},
-      </if>
-      <if test="record.enabled != null">
-        enabled = #{record.enabled,jdbcType=BIT},
       </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -195,15 +165,7 @@
   <update id="updateByExample" parameterType="map">
     update jsh_unit
     set id = #{record.id,jdbcType=BIGINT},
-      name = #{record.name,jdbcType=VARCHAR},
       basic_unit = #{record.basicUnit,jdbcType=VARCHAR},
-      other_unit = #{record.otherUnit,jdbcType=VARCHAR},
-      other_unit_two = #{record.otherUnitTwo,jdbcType=VARCHAR},
-      other_unit_three = #{record.otherUnitThree,jdbcType=VARCHAR},
-      ratio = #{record.ratio,jdbcType=DECIMAL},
-      ratio_two = #{record.ratioTwo,jdbcType=DECIMAL},
-      ratio_three = #{record.ratioThree,jdbcType=DECIMAL},
-      enabled = #{record.enabled,jdbcType=BIT},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -213,32 +175,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.Unit">
     update jsh_unit
     <set>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
-      </if>
       <if test="basicUnit != null">
         basic_unit = #{basicUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="otherUnit != null">
-        other_unit = #{otherUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="otherUnitTwo != null">
-        other_unit_two = #{otherUnitTwo,jdbcType=VARCHAR},
-      </if>
-      <if test="otherUnitThree != null">
-        other_unit_three = #{otherUnitThree,jdbcType=VARCHAR},
-      </if>
-      <if test="ratio != null">
-        ratio = #{ratio,jdbcType=DECIMAL},
-      </if>
-      <if test="ratioTwo != null">
-        ratio_two = #{ratioTwo,jdbcType=DECIMAL},
-      </if>
-      <if test="ratioThree != null">
-        ratio_three = #{ratioThree,jdbcType=DECIMAL},
-      </if>
-      <if test="enabled != null">
-        enabled = #{enabled,jdbcType=BIT},
       </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
@@ -251,15 +189,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.Unit">
     update jsh_unit
-    set name = #{name,jdbcType=VARCHAR},
+    set
       basic_unit = #{basicUnit,jdbcType=VARCHAR},
-      other_unit = #{otherUnit,jdbcType=VARCHAR},
-      other_unit_two = #{otherUnitTwo,jdbcType=VARCHAR},
-      other_unit_three = #{otherUnitThree,jdbcType=VARCHAR},
-      ratio = #{ratio,jdbcType=DECIMAL},
-      ratio_two = #{ratioTwo,jdbcType=DECIMAL},
-      ratio_three = #{ratioThree,jdbcType=DECIMAL},
-      enabled = #{enabled,jdbcType=BIT},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

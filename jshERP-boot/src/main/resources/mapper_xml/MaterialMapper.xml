@@ -84,9 +84,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, category_id, name, mfrs, model, standard, color, unit, remark, img_name, unit_id, 
-    expiry_num, weight, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
-    enable_batch_number, position, tenant_id, delete_flag
+    id, category_id, name,  model, standard, unit_id,remark,tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     select

@@ -131,7 +131,7 @@ public class UnitController {
      */
     @DeleteMapping(value = "/deleteBatch")
     @ApiOperation(value = "批量删除单位列表")
-    public BaseResponseInfo batchDeleteUnit(@RequestBody String ids,HttpServletRequest request) throws Exception{
+    public BaseResponseInfo batchDeleteUnit(String ids,HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             int result = unitService.batchDeleteUnit(ids,request);
