@@ -131,7 +131,6 @@ public class MaterialService {
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
-                    m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
                     m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);
                     m.setBigUnitStock(getBigUnitStock(m.getStock(), m.getUnitId()));
                     resList.add(m);
@@ -163,7 +162,6 @@ public class MaterialService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertMaterial(JSONObject obj, HttpServletRequest request)throws Exception {
         Material m = JSONObject.parseObject(obj.toJSONString(), Material.class);
-        m.setEnabled(true);
         try{
             materialMapperEx.insertSelectiveEx(m);
             Long mId = m.getId();
@@ -210,9 +208,6 @@ public class MaterialService {
             materialMapper.updateByPrimaryKeySelective(material);
             if(material.getUnitId() == null) {
                 materialMapperEx.setUnitIdToNull(material.getId());
-            }
-            if(material.getExpiryNum() == null) {
-                materialMapperEx.setExpiryNumToNull(material.getId());
             }
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
             if(obj.get("stock")!=null) {
@@ -325,7 +320,6 @@ public class MaterialService {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> materialIds = StringUtil.strToLongList(ids);
         Material material = new Material();
-        material.setEnabled(status);
         MaterialExample example = new MaterialExample();
         example.createCriteria().andIdIn(materialIds);
         int result =0;
@@ -503,29 +497,18 @@ public class MaterialService {
                 objs[0] = m.getName();
                 objs[1] = m.getStandard();
                 objs[2] = m.getModel();
-                objs[3] = m.getColor();
-                objs[4] = m.getCategoryName();
-                objs[5] = m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[6] = m.getExpiryNum() == null ? "" : m.getExpiryNum().toString();
-                objs[7] = m.getCommodityUnit();
-                objs[8] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getCommodityUnit();
-                objs[9] = m.getmBarCode();
-                objs[10] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
-                objs[11] = m.getRatio() == null ? "" : m.getRatio().toString();
-                objs[12] = m.getSku();
-                objs[13] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[14] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[15] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[16] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[17] = m.getEnabled() ? "1" : "0";
-                objs[18] = m.getEnableSerialNumber();
-                objs[19] = m.getEnableBatchNumber();
-                objs[20] = m.getPosition();
-                objs[21] = m.getMfrs();
-                objs[22] = m.getOtherField1();
-                objs[23] = m.getOtherField2();
-                objs[24] = m.getOtherField3();
-                objs[25] = m.getRemark();
+                objs[3] = m.getCategoryName();
+                objs[4] = m.getCommodityUnit();
+                objs[5] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getCommodityUnit();
+                objs[6] = m.getmBarCode();
+                objs[7] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
+                objs[8] = m.getRatio() == null ? "" : m.getRatio().toString();
+                objs[9] = m.getSku();
+                objs[10] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[11] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[12] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[13] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[14] = m.getRemark();
                 //仓库期初库存
                 int i = 26;
                 for(Depot depot: depotList) {
@@ -606,7 +589,6 @@ public class MaterialService {
                 m.setName(name);
                 m.setStandard(standard);
                 m.setModel(model);
-                m.setColor(color);
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
                 if(null!=categoryId){
                     m.setCategoryId(categoryId);
@@ -617,7 +599,6 @@ public class MaterialService {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_WEIGHT_NOT_DECIMAL_CODE,
                                 String.format(ExceptionConstants.MATERIAL_WEIGHT_NOT_DECIMAL_MSG, i+1));
                     }
-                    m.setWeight(new BigDecimal(weight));
                 }
                 if(StringUtil.isNotEmpty(expiryNum)) {
                     //校验保质期是否是正整数
@@ -625,7 +606,6 @@ public class MaterialService {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_CODE,
                                 String.format(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_MSG, i+1));
                     }
-                    m.setExpiryNum(Integer.parseInt(expiryNum));
                 }
                 String manyUnit = ExcelUtils.getContent(src, i, 8); //副单位
                 String barCode = ExcelUtils.getContent(src, i, 9); //基础条码
@@ -645,11 +625,6 @@ public class MaterialService {
                 String otherField2 = ExcelUtils.getContent(src, i, 23); //自定义2
                 String otherField3 = ExcelUtils.getContent(src, i, 24); //自定义3
                 String remark = ExcelUtils.getContent(src, i, 25); //备注
-                m.setPosition(StringUtil.isNotEmpty(position)?position:null);
-                m.setMfrs(StringUtil.isNotEmpty(mfrs)?mfrs:null);
-                m.setOtherField1(StringUtil.isNotEmpty(otherField1)?otherField1:null);
-                m.setOtherField2(StringUtil.isNotEmpty(otherField2)?otherField2:null);
-                m.setOtherField3(StringUtil.isNotEmpty(otherField3)?otherField3:null);
                 m.setRemark(remark);
                 //状态格式错误
                 if(!"1".equals(enabled) && !"0".equals(enabled)) {
@@ -701,21 +676,8 @@ public class MaterialService {
                     otherObj.put("wholesaleDecimal", parsePrice(wholesaleDecimal,ratio));
                     otherObj.put("lowDecimal", parsePrice(lowDecimal,ratio));
                     materialExObj.put("other", otherObj);
-                } else {
-                    m.setUnit(unit);
                 }
                 m.setMaterialExObj(materialExObj);
-                m.setEnabled("1".equals(enabled));
-                if(StringUtil.isNotEmpty(enableSerialNumber) && "1".equals(enableSerialNumber)) {
-                    m.setEnableSerialNumber("1");
-                } else {
-                    m.setEnableSerialNumber("0");
-                }
-                if(StringUtil.isNotEmpty(enableBatchNumber) && "1".equals(enableBatchNumber)) {
-                    m.setEnableBatchNumber("1");
-                } else {
-                    m.setEnableBatchNumber("0");
-                }
                 if("1".equals(enableSerialNumber) && "1".equals(enableBatchNumber)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLE_MUST_ONE_CODE,
                             String.format(ExceptionConstants.MATERIAL_ENABLE_MUST_ONE_MSG, barCode));
@@ -734,7 +696,7 @@ public class MaterialService {
                 Long mId = 0L;
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
                 String basicBarCode = getBasicBarCode(m);
-                List<Material> materials = getMaterialListByParam(m.getName(),m.getStandard(),m.getModel(),m.getColor(),m.getUnit(),m.getUnitId(), basicBarCode);
+                List<Material> materials = getMaterialListByParam(m.getName(),m.getStandard(),m.getModel(),m.getUnitId(), basicBarCode);
                 if(materials.size() == 0) {
                     materialMapperEx.insertSelectiveEx(m);
                     mId = m.getId();
@@ -888,8 +850,6 @@ public class MaterialService {
             if(name.equals(material.getName()) &&
                     standard.equals(material.getStandard()) &&
                     model.equals(material.getModel()) &&
-                    color.equals(material.getColor()) &&
-                    unit.equals(material.getUnit()) &&
                     sku.equals(materialSku)) {
                 String info = name + "-" + standard + "-" + model + "-" + color + "-" + unit + "-" + sku;
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
@@ -988,27 +948,16 @@ public class MaterialService {
      * @param name
      * @param standard
      * @param model
-     * @param color
-     * @param unit
      * @param unitId
      * @return
      */
-    private List<Material> getMaterialListByParam(String name, String standard, String model, String color, String unit, Long unitId, String basicBarCode) throws Exception {
+    private List<Material> getMaterialListByParam(String name, String standard, String model, Long unitId, String basicBarCode) throws Exception {
         List<Material> list = new ArrayList<>();
         MaterialExample example = new MaterialExample();
         MaterialExample.Criteria criteria = example.createCriteria();
         criteria.andNameEqualTo(name);
         if (StringUtil.isNotEmpty(model)) {
             criteria.andModelEqualTo(model);
-        }
-        if (StringUtil.isNotEmpty(color)) {
-            criteria.andColorEqualTo(color);
-        }
-        if (StringUtil.isNotEmpty(standard)) {
-            criteria.andStandardEqualTo(standard);
-        }
-        if (StringUtil.isNotEmpty(unit)) {
-            criteria.andUnitEqualTo(unit);
         }
         if (unitId !=null) {
             criteria.andUnitIdEqualTo(unitId);
@@ -1301,31 +1250,6 @@ public class MaterialService {
             Unit unit = unitService.getUnit(unitId);
         }
         return bigUnitStock;
-    }
-
-    /**
-     * 构造扩展信息
-     * @param mpArr
-     * @param m
-     * @return
-     */
-    public String getMaterialOtherByParam(String[] mpArr, MaterialVo4Unit m) {
-        String materialOther = "";
-        for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("制造商")) {
-                materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
-            }
-            if (mpArr[i].equals("自定义1")) {
-                materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
-            }
-            if (mpArr[i].equals("自定义2")) {
-                materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
-            }
-            if (mpArr[i].equals("自定义3")) {
-                materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
-            }
-        }
-        return materialOther;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

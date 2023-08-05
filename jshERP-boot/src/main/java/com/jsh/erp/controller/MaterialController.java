@@ -148,10 +148,6 @@ public class MaterialController {
             String[] mpArr = mpList.split(",");
             MaterialVo4Unit mu = new MaterialVo4Unit();
             List<MaterialVo4Unit> list = materialService.findByIdWithBarCode(meId);
-            if(list!=null && list.size()>0) {
-                mu = list.get(0);
-                mu.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mu));
-            }
             res.code = 200;
             res.data = mu;
         } catch(Exception e){
@@ -236,11 +232,8 @@ public class MaterialController {
                     item.put("categoryName", material.getCategoryName());
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
-                    item.put("color", material.getColor());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
-                    item.put("enableSerialNumber", material.getEnableSerialNumber());
-                    item.put("enableBatchNumber", material.getEnableBatchNumber());
                     BigDecimal stock;
                     if(StringUtil.isNotEmpty(material.getSku())){
                         stock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
@@ -248,8 +241,6 @@ public class MaterialController {
                         stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
                     }
                     item.put("stock", stock);
-                    item.put("expand", materialService.getMaterialOtherByParam(mpArr, material));
-                    item.put("imgName", material.getImgName());
                     dataArray.add(item);
                 }
             }
@@ -292,14 +283,10 @@ public class MaterialController {
                 String MaterialName = "";
                 MaterialName = MaterialName + material.getmBarCode() + "_" + material.getName()
                         + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")");
-                String expand = materialService.getMaterialOtherByParam(mpArr, material); //扩展信息
-                MaterialName = MaterialName + expand + ((material.getUnit() == null || material.getUnit().equals("")) ? "" : "(" + material.getUnit() + ")") + ratio;
                 item.put("MaterialName", MaterialName);
                 item.put("name", material.getName());
-                item.put("expand", expand);
                 item.put("model", material.getModel());
                 item.put("standard", material.getStandard());
-                item.put("unit", material.getUnit() + ratio);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -460,7 +447,6 @@ public class MaterialController {
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 for(MaterialVo4Unit mvo: list) {
-                    mvo.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mvo));
                     if ("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
                         //零售价
                         mvo.setBillPrice(mvo.getCommodityDecimal());
