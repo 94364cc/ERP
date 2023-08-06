@@ -2,9 +2,12 @@ package com.jsh.erp.exception;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.utils.BaseResponseInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,5 +46,12 @@ public class GlobalExceptionHandler {
         log.error("Global Exception Occured => url : {}", request.getRequestURL(), e);
         e.printStackTrace();
         return status;
+    }
+
+    @ExceptionHandler(ResultException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseResponseInfo handleResultException(ResultException e) {
+        log.error("Result exception: [{}]", e.getMessage(), e);
+        return new BaseResponseInfo(e.getMessage());
     }
 }
