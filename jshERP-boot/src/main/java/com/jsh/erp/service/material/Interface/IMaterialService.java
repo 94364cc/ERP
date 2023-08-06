@@ -2,8 +2,10 @@ package com.jsh.erp.service.material.Interface;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsh.erp.datasource.entities.Material;
+import com.jsh.erp.datasource.page.MaterialPage;
 
 public interface IMaterialService extends IService<Material> {
 
@@ -32,4 +34,11 @@ public interface IMaterialService extends IService<Material> {
      * @return
      */
     Boolean batchDeleteMaterial(List<Long> ids);
+
+    /**
+     * 分页参数
+     * @param materialPage
+     * @return
+     */
+    Page<Material> getPage(MaterialPage materialPage);
 }

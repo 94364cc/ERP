@@ -3,6 +3,7 @@ package com.jsh.erp.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.exception.ResultInterface;
@@ -17,6 +18,14 @@ public class BaseResponseInfo {
 		this.code = code;
 	}
 
+	public static BaseResponseInfo data(Object data) {
+		return new BaseResponseInfo(ResultEnum.SUCCESS.getCode(), data);
+	}
+
+	public BaseResponseInfo(int code,Object data) {
+		this.code = 200;
+		this.data = data;
+	}
 	public BaseResponseInfo(String message) {
 		this.code = 400;
 		messageMap.put("message",message);

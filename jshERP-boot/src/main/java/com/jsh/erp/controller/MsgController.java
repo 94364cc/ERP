@@ -1,9 +1,7 @@
 //package com.jsh.erp.controller;
 //
 //import com.alibaba.fastjson.JSONObject;
-//import com.jsh.erp.datasource.entities.Msg;
 //import com.jsh.erp.datasource.entities.MsgEx;
-//import com.jsh.erp.service.msg.MsgService;
 //import com.jsh.erp.utils.BaseResponseInfo;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;

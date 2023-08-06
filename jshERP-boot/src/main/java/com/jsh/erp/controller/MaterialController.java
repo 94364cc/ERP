@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.jsh.erp.datasource.entities.Material;
+import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.service.material.Interface.IMaterialService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
@@ -76,22 +77,22 @@ public class MaterialController {
      * @return
      */
     @DeleteMapping(value = "/delete")
-    @ApiOperation(value = "单个删除商品")
+    @ApiOperation(value = "批量删除商品")
     public BaseResponseInfo delete(@RequestParam Long id) throws Exception{
         materialService.deleteMaterial(id);
         return BaseResponseInfo.success();
     }
 
-
     /**
-     * 商品分页
-     * @param material
+     * 查看商品列表
+     * @param
      * @return
      */
-    @PutMapping(value = "/update")
-    @ApiOperation(value = "更新商品")
-    public BaseResponseInfo getPage(@RequestBody Material material) throws Exception{
-        materialService.updateMaterial(material);
-        return BaseResponseInfo.success();
+    @DeleteMapping(value = "/list")
+    @ApiOperation(value = "单个删除商品")
+    public BaseResponseInfo getPage(MaterialPage materialPage){
+        return BaseResponseInfo.data(materialService.getPage(materialPage));
     }
+
+
 }
