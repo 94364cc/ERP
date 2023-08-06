@@ -13,6 +13,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.RequestUtil;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -168,6 +169,15 @@ public class LogService {
             }
         }catch(Exception e){
             JshException.writeFail(logger, e);
+        }
+    }
+
+    public void insertLog(String moduleName, String content){
+        HttpServletRequest request = RequestUtil.getHttpServletRequest();
+        try {
+            this.insertLog(moduleName,content,request);
+        }catch (Exception e){
+            logger.error(e.getMessage());
         }
     }
 

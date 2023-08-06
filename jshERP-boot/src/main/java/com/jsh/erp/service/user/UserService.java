@@ -7,6 +7,7 @@ import com.jsh.erp.service.platformConfig.PlatformConfigService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.utils.HttpClient;
+import com.jsh.erp.utils.RequestUtil;
 import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -792,6 +793,20 @@ public class UserService {
      * @return
      */
     public Long getUserId(HttpServletRequest request) throws Exception{
+        Object userIdObj = redisService.getObjectFromSessionByKey(request,"userId");
+        Long userId = null;
+        if(userIdObj != null) {
+            userId = Long.parseLong(userIdObj.toString());
+        }
+        return userId;
+    }
+
+    /**
+     * 获取用户id
+     * @return
+     */
+    public Long getUserId() throws Exception{
+        HttpServletRequest request = RequestUtil.getHttpServletRequest();
         Object userIdObj = redisService.getObjectFromSessionByKey(request,"userId");
         Long userId = null;
         if(userIdObj != null) {

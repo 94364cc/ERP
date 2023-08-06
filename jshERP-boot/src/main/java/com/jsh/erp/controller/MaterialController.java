@@ -1,16 +1,22 @@
 package com.jsh.erp.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.service.material.Interface.IMaterialService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,4 +44,54 @@ public class MaterialController {
         return BaseResponseInfo.success();
     }
 
+    /**
+     * 更新商品
+     * @param material
+     * @return
+     */
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "更新商品")
+    public BaseResponseInfo update(@RequestBody Material material) throws Exception{
+        materialService.updateMaterial(material);
+        return BaseResponseInfo.success();
+    }
+
+    /**
+     * 批量删除商品
+     * @param
+     * @return
+     */
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除商品")
+    public BaseResponseInfo delete(@RequestParam String ids) throws Exception{
+        List<Long> idList = StringUtil.split2List(ids);
+        materialService.batchDeleteMaterial(idList);
+        return BaseResponseInfo.success();
+    }
+
+
+    /**
+     * 批量删除商品
+     * @param
+     * @return
+     */
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "单个删除商品")
+    public BaseResponseInfo delete(@RequestParam Long id) throws Exception{
+        materialService.deleteMaterial(id);
+        return BaseResponseInfo.success();
+    }
+
+
+    /**
+     * 商品分页
+     * @param material
+     * @return
+     */
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "更新商品")
+    public BaseResponseInfo getPage(@RequestBody Material material) throws Exception{
+        materialService.updateMaterial(material);
+        return BaseResponseInfo.success();
+    }
 }

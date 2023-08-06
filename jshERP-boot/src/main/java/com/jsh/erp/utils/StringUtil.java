@@ -1,5 +1,7 @@
 package com.jsh.erp.utils;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author jishenghua qq752718920  2018-10-7 15:26:27
@@ -42,6 +45,16 @@ public class StringUtil {
         }else{
             return source.equals(target);
         }
+    }
+
+
+    public static List<Long> split2List(String ids) {
+        List<Long> idList = CollUtil.newArrayList();
+        if(StrUtil.isNotBlank(ids)){
+            idList = Arrays.asList(ids.split(",")).stream().map(Long::parseLong).collect(
+                Collectors.toList());
+        }
+        return idList;
     }
 
     public static boolean isEmpty(String str) {
