@@ -4,8 +4,10 @@ package com.jsh.erp.service.material;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -15,11 +17,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Material;
+import com.jsh.erp.datasource.entities.MaterialCategory;
+import com.jsh.erp.datasource.entities.NMaterialCategory;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.Interface.IMaterialService;
+import com.jsh.erp.service.materialCategory.Interface.IMaterialCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +36,9 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    IMaterialCategoryService materialCategoryService;
     /**
      * 添加商品
      * @param material
@@ -107,10 +115,21 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
      */
     @Override
     public Page<Material> getPage(MaterialPage materialPage) {
-        return this.page(materialPage,Wrappers.<Material>lambdaQuery()
+        Page<Material> page =  this.page(materialPage,Wrappers.<Material>lambdaQuery()
             .eq(StrUtil.isNotBlank(materialPage.getName()),Material::getName,materialPage.getName())
             .eq(StrUtil.isNotBlank(materialPage.getModel()),Material::getName,materialPage.getModel())
         );
+
+        List<Material> materialList = page.getRecords();
+        if(CollUtil.isEmpty(materialList)){
+            return page;
+        }
+        List<Long> categoryIds = materialList.stream().map(Material::getCategoryId).collect(Collectors.toList());
+        Map<Long,String> categoryMap = materialCategoryService.getMapByIds(categoryIds);
+        for(Material material : materialList){
+            material.setCategoryName(categoryMap.get(material.getCategoryId()));
+        }
+        return page;
     }
 
     /**

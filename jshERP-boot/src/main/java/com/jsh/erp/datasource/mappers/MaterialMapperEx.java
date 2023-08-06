@@ -14,5 +14,7 @@ import org.apache.ibatis.annotations.Param;
 public interface MaterialMapperEx {
 
     List<Material> getMaterialListByUnitIds(@Param("unitIds") String[] unitIds);
+    List<Material> getMaterialListByCategoryIds(@Param("categoryIds") String[] categoryIds);
+
 
 }
