@@ -90,7 +90,7 @@ public class MaterialCategoryService {
         List<MaterialCategory> res= new ArrayList<MaterialCategory>();
         List<MaterialCategory> list=null;
         MaterialCategoryExample example = new MaterialCategoryExample();
-        example.createCriteria().andParentIdEqualTo(parentId).andIdNotEqualTo(1L);
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED).andParentIdEqualTo(parentId).andIdNotEqualTo(1L);
         example.setOrderByClause("id");
         list=materialCategoryMapper.selectByExample(example);
         if(list!=null && list.size()>0) {

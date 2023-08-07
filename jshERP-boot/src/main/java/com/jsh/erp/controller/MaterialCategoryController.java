@@ -99,7 +99,7 @@ public class MaterialCategoryController {
      * @Param:
      * @return com.alibaba.fastjson.JSONArray
      */
-    @RequestMapping(value = "/getMaterialCategoryTree")
+    @GetMapping(value = "/getMaterialCategoryTree")
     @ApiOperation(value = "获取商品类别树数据")
     public JSONArray getMaterialCategoryTree(@RequestParam("id") Long id) throws Exception{
        JSONArray arr=new JSONArray();
@@ -121,9 +121,9 @@ public class MaterialCategoryController {
      * @Param: beanJson
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/addMaterialCategory")
+    @PostMapping(value = "/addMaterialCategory")
     @ApiOperation(value = "新增商品类别数据")
-    public Object addMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
+    public Object addMaterialCategory(@RequestBody String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);
         int i= materialCategoryService.addMaterialCategory(mc);
@@ -133,6 +133,31 @@ public class MaterialCategoryController {
         }
         return result;
     }
+
+
+    /**
+     * create by: cjl
+     * description:
+     *  新增商品类别数据
+     * create time: 2019/2/19 17:17
+     * @Param: beanJson
+     * @return java.lang.Object
+     */
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除商品类别数据")
+    public BaseResponseInfo deleteBatch(@RequestParam String ids) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            int result = materialCategoryService.batchDeleteMaterialCategoryByIds(ids);
+            res.code = 200;
+            res.data = result;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "删除单位失败";
+        }
+        return res;
+    }
     /**
      * create by: cjl
      * description:
@@ -141,9 +166,9 @@ public class MaterialCategoryController {
      * @Param: beanJson
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/editMaterialCategory")
+    @PutMapping(value = "/editMaterialCategory")
     @ApiOperation(value = "修改商品类别数据")
-    public Object editMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
+    public Object editMaterialCategory(@RequestBody String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);
         int i= materialCategoryService.editMaterialCategory(mc);

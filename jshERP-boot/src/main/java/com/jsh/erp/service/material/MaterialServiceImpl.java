@@ -1,8 +1,6 @@
 package com.jsh.erp.service.material;
 
-
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -10,15 +8,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Material;
-import com.jsh.erp.datasource.entities.MaterialCategory;
-import com.jsh.erp.datasource.entities.NMaterialCategory;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.exception.ResultEnum;
