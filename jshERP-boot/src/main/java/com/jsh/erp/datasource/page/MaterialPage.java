@@ -8,9 +8,6 @@ import lombok.Data;
 
 @Data
 public class MaterialPage extends Page<Material> {
-    @ApiModelProperty(value = "商品名称")
-    private String name;
-
-    @ApiModelProperty(value = "款号")
-    private String model;
+    @ApiModelProperty(value = "查询参数，商品名称，编号")
+    private String queryParam;
 }

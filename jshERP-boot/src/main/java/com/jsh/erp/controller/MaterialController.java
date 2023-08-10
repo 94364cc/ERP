@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,12 +73,12 @@ public class MaterialController {
 
 
     /**
-     * 批量删除商品
+     * 删除商品
      * @param
      * @return
      */
     @DeleteMapping(value = "/delete")
-    @ApiOperation(value = "批量删除商品")
+    @ApiOperation(value = "删除商品")
     public BaseResponseInfo delete(@RequestParam Long id) throws Exception{
         materialService.deleteMaterial(id);
         return BaseResponseInfo.success();
@@ -88,8 +89,8 @@ public class MaterialController {
      * @param
      * @return
      */
-    @DeleteMapping(value = "/list")
-    @ApiOperation(value = "单个删除商品")
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "查看商品分页")
     public BaseResponseInfo getPage(MaterialPage materialPage){
         return BaseResponseInfo.data(materialService.getPage(materialPage));
     }

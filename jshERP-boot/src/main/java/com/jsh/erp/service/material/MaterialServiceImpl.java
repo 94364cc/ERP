@@ -15,11 +15,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
+import com.jsh.erp.datasource.mappers.UnitMapper;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.Interface.IMaterialService;
 import com.jsh.erp.service.materialCategory.Interface.IMaterialCategoryService;
+import com.jsh.erp.service.unit.UnitService;
+import com.jsh.erp.utils.StringUtil;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +38,9 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
     @Autowired
     IMaterialCategoryService materialCategoryService;
+
+    @Autowired
+    UnitService unitService;
     /**
      * 添加商品
      * @param material
@@ -111,19 +118,26 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     @Override
     public Page<Material> getPage(MaterialPage materialPage) {
         Page<Material> page =  this.page(materialPage,Wrappers.<Material>lambdaQuery()
-            .eq(StrUtil.isNotBlank(materialPage.getName()),Material::getName,materialPage.getName())
-            .eq(StrUtil.isNotBlank(materialPage.getModel()),Material::getName,materialPage.getModel())
+            .and(StrUtil.isNotBlank(materialPage.getQueryParam()),
+                wp->wp.like(Material::getModel,materialPage.getQueryParam())
+                    .or().like(Material::getName,materialPage.getQueryParam()))
         );
 
         List<Material> materialList = page.getRecords();
         if(CollUtil.isEmpty(materialList)){
             return page;
         }
+        //转义分类
         List<Long> categoryIds = materialList.stream().map(Material::getCategoryId).collect(Collectors.toList());
         Map<Long,String> categoryMap = materialCategoryService.getMapByIds(categoryIds);
+        //转义单位
+        List<Long> units = materialList.stream().map(Material::getUnitId).collect(Collectors.toList());
+        Map<Long,String> unitMap = unitService.getUnitMapByIds(units);
         for(Material material : materialList){
             material.setCategoryName(categoryMap.get(material.getCategoryId()));
+            material.setUnitName(unitMap.get(material.getUnitId()));
         }
+
         return page;
     }
 

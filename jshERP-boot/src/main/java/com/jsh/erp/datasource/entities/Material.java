@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -43,6 +45,10 @@ public class Material {
     @TableField(value = "unit_id")
     private Long unitId;
 
+    @ApiModelProperty(value = "单位id")
+    @TableField(exist = false)
+    private String unitName;
+
     @ApiModelProperty(value = "备注")
     @TableField(value = "remark")
     private String remark;
@@ -51,26 +57,9 @@ public class Material {
     @TableField(value = "tenant_id")
     private Long tenantId;
 
-    @ApiModelProperty(value = "创建人")
-    @TableField(value = "create_by", fill = FieldFill.INSERT)
-    private String createBy;
-
-    @ApiModelProperty(value = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    @ApiModelProperty(value = "更新人")
-    @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
-    private String updateBy;
-
-    @ApiModelProperty(value = "更新时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
-
     @ApiModelProperty(value = "逻辑删除标记 0-否 1-是")
     @TableField(value = "delete_flag")
+    @TableLogic
     private String deleteFlag;
 
 }

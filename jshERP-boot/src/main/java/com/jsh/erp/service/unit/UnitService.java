@@ -1,6 +1,8 @@
 package com.jsh.erp.service.unit;
 
 import com.alibaba.fastjson.JSONObject;
+
+import cn.hutool.core.collection.CollUtil;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Material;
@@ -27,7 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UnitService {
@@ -66,6 +71,14 @@ public class UnitService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    public Map<Long,String> getUnitMapByIds(List<Long> ids) {
+        if(CollUtil.isEmpty(ids)) return new HashMap<>();
+        UnitExample example = new UnitExample();
+        example.createCriteria().andIdIn(ids);
+        List<Unit> list = unitMapper.selectByExample(example);
+        return list.stream().collect(Collectors.toMap(Unit::getId,Unit::getBasicUnit));
     }
 
     public List<Unit> getUnit()throws Exception {
