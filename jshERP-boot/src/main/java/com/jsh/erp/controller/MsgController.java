@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
 
+import com.jsh.erp.datasource.entities.Msg;
 import com.jsh.erp.datasource.entities.MsgEx;
 import com.jsh.erp.datasource.vo.LogVo4List;
+import com.jsh.erp.service.msg.MsgComponent;
 import com.jsh.erp.service.msg.MsgService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.Constants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -35,6 +38,8 @@ public class MsgController {
 
     @Resource
     private MsgService msgService;
+    @Resource
+    private MsgComponent msgComponent;
 
     /**
      * 根据状态查询消息
@@ -66,14 +71,18 @@ public class MsgController {
      */
     @GetMapping(value = "/list")
     @ApiOperation(value = "获取日志信息")
-    public BaseResponseInfo getPluginInfo(@RequestParam(value = "name",required = false) String name,
+    public BaseResponseInfo getPluginInfo(@RequestParam(value = "search",required = false) String search,
                                           @RequestParam("currentPage") Integer currentPage,
                                           @RequestParam("pageSize") Integer pageSize,
                                           HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<MsgEx> resList = msgService.select(name,currentPage,pageSize);
+            Map<String,String> param = new HashMap<>();
+            param.put(Constants.SEARCH,search);
+            param.put("currentPage",""+currentPage);
+            param.put("pageSize",""+pageSize);
+            List resList = msgComponent.select(param);
             map.put("rows", resList);
             map.put("total", resList.size());
             res.code = 200;
