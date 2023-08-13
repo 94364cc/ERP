@@ -398,7 +398,7 @@ public class UserService {
         }
         try {
             UserExample example = new UserExample();
-            example.createCriteria().andLoginNameEqualTo(loginName).andPasswordEqualTo(Tools.md5Encryp(password))
+            example.createCriteria().andLoginNameEqualTo(loginName).andPasswordEqualTo(password)
                     .andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
             list = userMapper.selectByExample(example);
             if (null != list && list.size() == 0) {

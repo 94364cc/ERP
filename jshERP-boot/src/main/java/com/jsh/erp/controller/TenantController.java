@@ -35,7 +35,7 @@ import java.util.UUID;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji_sheng_hua 华夏erp
+ * @author ji_sheng_hua 萨达沃
  */
 @RestController
 @RequestMapping(value = "/tenant")

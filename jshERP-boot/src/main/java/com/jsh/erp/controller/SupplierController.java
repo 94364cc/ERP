@@ -37,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji|sheng|hua 华夏erp
+ * @author ji|sheng|hua 萨达沃
  */
 @RestController
 @RequestMapping(value = "/supplier")

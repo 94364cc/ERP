@@ -33,8 +33,8 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("华夏ERP Restful Api")
-                .description("华夏ERP接口描述")
+                .title("萨达沃 Restful Api")
+                .description("萨达沃接口描述")
                 .termsOfServiceUrl("http://127.0.0.1")
                 .contact(new Contact("jishenghua", "", ""))
                 .version("3.0")

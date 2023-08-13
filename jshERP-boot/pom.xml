@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>jshERP-boot</name>
-	<description>华夏ERP</description>
+	<description>萨达沃</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
