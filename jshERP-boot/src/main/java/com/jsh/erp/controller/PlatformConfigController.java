@@ -1,28 +1,32 @@
 package com.jsh.erp.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.alibaba.fastjson.JSONObject;
+
 import com.jsh.erp.datasource.entities.PlatformConfig;
-import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.service.platformConfig.PlatformConfigService;
-import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author  萨达沃
+ * @author ji|sheng|hua 华夏erp QQ7827-18920
  */
 @RestController
 @RequestMapping(value = "/platformConfig")

@@ -1,8 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
+import java.util.List;
+
 import com.jsh.erp.datasource.entities.MaterialCategory;
 import com.jsh.erp.datasource.entities.MaterialCategoryExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface MaterialCategoryMapper {

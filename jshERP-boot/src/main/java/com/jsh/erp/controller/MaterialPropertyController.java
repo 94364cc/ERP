@@ -1,5 +1,10 @@
 package com.jsh.erp.controller;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.jsh.erp.datasource.entities.MaterialProperty;
 import com.jsh.erp.service.materialProperty.MaterialPropertyService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -9,14 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
 /**
  * Description
  *
- * @Author: zhengchenchen
+ * @Author: qiankunpingtai
  * @Date: 2019/3/29 15:24
  */
 @RestController

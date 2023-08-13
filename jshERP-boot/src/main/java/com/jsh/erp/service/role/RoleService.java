@@ -1,6 +1,15 @@
 package com.jsh.erp.service.role;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.alibaba.fastjson.JSONObject;
+
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Role;
 import com.jsh.erp.datasource.entities.RoleEx;
@@ -18,13 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class RoleService {
@@ -172,7 +174,7 @@ public class RoleService {
         return list;
     }
     /**
-     * create by: zhengchenchen
+     * create by: qiankunpingtai
      *  逻辑删除角色信息
      * create time: 2019/3/28 15:44
      * @Param: ids

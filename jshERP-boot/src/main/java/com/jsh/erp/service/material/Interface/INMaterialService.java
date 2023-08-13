@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.page.MaterialPage;
 
-public interface IMaterialService extends IService<Material> {
+public interface INMaterialService extends IService<Material> {
 
     /**
      * 添加商品

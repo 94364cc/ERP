@@ -15,7 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.service.depot.DepotComponent;
 import com.jsh.erp.service.depot.DepotService;
-import com.jsh.erp.service.material.Interface.IMaterialService;
+import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.Constants;
@@ -52,7 +52,7 @@ public class DepotController {
     private UserBusinessService userBusinessService;
 
     @Resource
-    private IMaterialService materialService;
+    private INMaterialService materialService;
 
     /**
      * 仓库列表

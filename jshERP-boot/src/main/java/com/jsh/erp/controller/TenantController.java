@@ -1,41 +1,28 @@
 package com.jsh.erp.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.Tenant;
-import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.datasource.entities.UserEx;
-import com.jsh.erp.datasource.vo.TreeNodeEx;
-import com.jsh.erp.exception.BusinessParamCheckingException;
-import com.jsh.erp.service.log.LogService;
-import com.jsh.erp.service.redis.RedisService;
+
 import com.jsh.erp.service.tenant.TenantService;
-import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.*;
+import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji_sheng_hua 萨达沃
+ * @author ji_sheng_hua 华夏erp
  */
 @RestController
 @RequestMapping(value = "/tenant")

@@ -1,8 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
+import java.util.List;
+
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.entities.UserBusinessExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserBusinessMapper {

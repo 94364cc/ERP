@@ -1,11 +1,10 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.MaterialProperty;
-import com.jsh.erp.datasource.entities.MaterialPropertyExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.Date;
 import java.util.List;
+
+import com.jsh.erp.datasource.entities.MaterialProperty;
+import org.apache.ibatis.annotations.Param;
 
 public interface MaterialPropertyMapperEx {
 

@@ -24,10 +24,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author  萨达沃
+ * @author ji|sheng|hua 华夏erp
  */
 @RestController
 @RequestMapping(value = "/supplier")
@@ -137,12 +135,12 @@ public class SupplierController {
     }
 
     /**
-     * 查找往来客户，含供应商和客户信息-下拉框
+     * 查找往来单位，含供应商和客户信息-下拉框
      * @param request
      * @return
      */
     @PostMapping(value = "/findBySelect_organ")
-    @ApiOperation(value = "查找往来客户，含供应商和客户信息")
+    @ApiOperation(value = "查找往来单位，含供应商和客户信息")
     public JSONArray findBySelectOrgan(HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
@@ -398,121 +396,6 @@ public class SupplierController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    /**
-     * 客户列表
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/list")
-    @ApiOperation(value = "客户列表")
-    public BaseResponseInfo getAllList(HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            List<Supplier> unitList = supplierService.getSupplier();
-            res.code = 200;
-            res.data = unitList;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-
-    /**
-     * 客户列表
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @PostMapping(value = "/add")
-    @ApiOperation(value = "新增客户")
-    public BaseResponseInfo insertSupplier(@RequestBody JSONObject obj,HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            int result = supplierService.insertSupplier(obj,request);
-            res.code = 200;
-            res.data = result;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "新增客户失败";
-        }
-        return res;
-    }
-
-
-    /**
-     * 更新客户列表
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @PutMapping(value = "/update")
-    @ApiOperation(value = "更新客户")
-    public BaseResponseInfo updateSupplier(@RequestBody JSONObject obj,HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            int result = supplierService.updateSupplier(obj,request);
-            res.code = 200;
-            res.data = result;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "更新客户失败";
-        }
-        return res;
-    }
-
-
-    /**
-     * 删除客户列表
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @DeleteMapping(value = "/delete")
-    @ApiOperation(value = "删除客户列表")
-    public BaseResponseInfo deleteSupplier(Long id, HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            int result = supplierService.deleteSupplier(id,request);
-            res.code = 200;
-            res.data = result;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "删除客户失败";
-        }
-        return res;
-    }
-
-
-    /**
-     * 批量删除客户列表
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @DeleteMapping(value = "/deleteBatch")
-    @ApiOperation(value = "批量删除客户列表")
-    public BaseResponseInfo batchDeleteSupplier(String ids,HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            int result = supplierService.batchDeleteSupplier(ids,request);
-            res.code = 200;
-            res.data = result;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "批量删除客户失败";
-        }
-        return res;
     }
 
 }

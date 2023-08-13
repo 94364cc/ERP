@@ -1,11 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.Person;
-import com.jsh.erp.datasource.entities.PersonExample;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Date;
 import java.util.List;
+
+import com.jsh.erp.datasource.entities.Person;
+import org.apache.ibatis.annotations.Param;
 
 public interface PersonMapperEx {
 

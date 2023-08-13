@@ -1,7 +1,5 @@
 package com.jsh.erp.datasource.entities;
 
-import java.util.Date;
-
 /**
  * Description
  *

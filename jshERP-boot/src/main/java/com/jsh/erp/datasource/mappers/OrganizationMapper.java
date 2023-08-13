@@ -1,8 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
+import java.util.List;
+
 import com.jsh.erp.datasource.entities.Organization;
 import com.jsh.erp.datasource.entities.OrganizationExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface OrganizationMapper {

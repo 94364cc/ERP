@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.page.MaterialPage;
-import com.jsh.erp.service.material.Interface.IMaterialService;
+import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MaterialController {
 
     @Resource
-    private IMaterialService materialService;
+    private INMaterialService materialService;
 
 
     /**

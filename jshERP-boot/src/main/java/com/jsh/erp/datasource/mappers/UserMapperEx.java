@@ -1,15 +1,12 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.datasource.entities.UserEx;
-import com.jsh.erp.datasource.entities.UserExample;
-import com.jsh.erp.datasource.vo.TreeNode;
-import com.jsh.erp.datasource.vo.TreeNodeEx;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.UserEx;
+import com.jsh.erp.datasource.vo.TreeNodeEx;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapperEx {
 

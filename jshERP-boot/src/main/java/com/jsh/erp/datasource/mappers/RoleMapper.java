@@ -1,8 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
+import java.util.List;
+
 import com.jsh.erp.datasource.entities.Role;
 import com.jsh.erp.datasource.entities.RoleExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface RoleMapper {

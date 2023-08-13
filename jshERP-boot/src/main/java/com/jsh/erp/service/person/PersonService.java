@@ -1,14 +1,23 @@
 package com.jsh.erp.service.person;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.alibaba.fastjson.JSONObject;
+
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-//import com.jsh.erp.datasource.entities.AccountHead;
-//import com.jsh.erp.datasource.entities.DepotHead;
+import com.jsh.erp.datasource.entities.AccountHead;
+import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.Person;
 import com.jsh.erp.datasource.entities.PersonExample;
-//import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
-//import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
+import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
+import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.PersonMapper;
 import com.jsh.erp.datasource.mappers.PersonMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -23,13 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Service
 public class PersonService {
     private Logger logger = LoggerFactory.getLogger(PersonService.class);
@@ -43,10 +45,10 @@ public class PersonService {
     private UserService userService;
     @Resource
     private LogService logService;
-    //@Resource
-    //private AccountHeadMapperEx accountHeadMapperEx;
-    //@Resource
-    //private DepotHeadMapperEx depotHeadMapperEx;
+    @Resource
+    private AccountHeadMapperEx accountHeadMapperEx;
+    @Resource
+    private DepotHeadMapperEx depotHeadMapperEx;
 
     public Person getPerson(long id)throws Exception {
         Person result=null;
@@ -144,50 +146,50 @@ public class PersonService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeletePersonByIds(String ids)throws Exception {
-        //int result =0;
-        //String [] idArray=ids.split(",");
-        ////校验财务主表	jsh_accounthead
-        //List<AccountHead> accountHeadList =null;
-        //try{
-        //    accountHeadList=accountHeadMapperEx.getAccountHeadListByHandsPersonIds(idArray);
-        //}catch(Exception e){
-        //    JshException.readFail(logger, e);
-        //}
-        //if(accountHeadList!=null&&accountHeadList.size()>0){
-        //    logger.error("异常码[{}],异常提示[{}],参数,HandsPersonIds[{}]",
-        //            ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
-        //    throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
-        //            ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
-        //}
-        ////校验单据主表	jsh_depot_head
-        //List<DepotHead> depotHeadList =null;
-        //try{
-        //    depotHeadList=depotHeadMapperEx.getDepotHeadListByCreator(idArray);
-        //}catch(Exception e){
-        //    JshException.readFail(logger, e);
-        //}
-        //if(depotHeadList!=null&&depotHeadList.size()>0){
-        //    logger.error("异常码[{}],异常提示[{}],参数,HandsPersonIds[{}]",
-        //            ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
-        //    throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
-        //            ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
-        //}
-        ////记录日志
-        //StringBuffer sb = new StringBuffer();
-        //sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
-        //List<Person> list = getPersonListByIds(ids);
-        //for(Person person: list){
-        //    sb.append("[").append(person.getName()).append("]");
-        //}
-        //logService.insertLog("经手人", sb.toString(),
-        //        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        ////删除经手人
-        //try{
-        //    result=personMapperEx.batchDeletePersonByIds(idArray);
-        //}catch(Exception e){
-        //    JshException.writeFail(logger, e);
-        //}
-        return 1;
+        int result =0;
+        String [] idArray=ids.split(",");
+        //校验财务主表	jsh_accounthead
+        List<AccountHead> accountHeadList =null;
+        try{
+            accountHeadList=accountHeadMapperEx.getAccountHeadListByHandsPersonIds(idArray);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        if(accountHeadList!=null&&accountHeadList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,HandsPersonIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        //校验单据主表	jsh_depot_head
+        List<DepotHead> depotHeadList =null;
+        try{
+            depotHeadList=depotHeadMapperEx.getDepotHeadListByCreator(idArray);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        if(depotHeadList!=null&&depotHeadList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,HandsPersonIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        //记录日志
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Person> list = getPersonListByIds(ids);
+        for(Person person: list){
+            sb.append("[").append(person.getName()).append("]");
+        }
+        logService.insertLog("经手人", sb.toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        //删除经手人
+        try{
+            result=personMapperEx.batchDeletePersonByIds(idArray);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
     }
 
     public int checkIsNameExist(Long id, String name) throws Exception{

@@ -1,8 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
+import java.util.List;
+
 import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.TenantExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TenantMapper {

@@ -1,6 +1,22 @@
 package com.jsh.erp.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.jsh.erp.datasource.entities.SystemConfig;
+import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
@@ -20,16 +36,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 
-import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-
 /**
  * Description
  * @Author: jishenghua
@@ -43,9 +49,9 @@ public class SystemConfigController {
 
     @Resource
     private UserService userService;
-    //
-    //@Resource
-    //private DepotService depotService;
+
+    @Resource
+    private DepotService depotService;
 
     @Resource
     private UserBusinessService userBusinessService;

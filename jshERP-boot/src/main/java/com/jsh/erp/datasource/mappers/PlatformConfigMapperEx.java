@@ -1,10 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
+import java.util.List;
+
 import com.jsh.erp.datasource.entities.PlatformConfig;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.Date;
-import java.util.List;
 
 public interface PlatformConfigMapperEx {
 

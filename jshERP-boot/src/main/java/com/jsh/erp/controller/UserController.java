@@ -12,22 +12,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.Organization;
 import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
-import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.tenant.TenantService;
-import com.jsh.erp.service.user.UserComponent;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.RandImageUtil;
 import com.jsh.erp.utils.Tools;
@@ -36,21 +32,19 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji_sheng_hua 萨达沃
+ * @author ji_sheng_hua 华夏erp
  */
 @RestController
 @RequestMapping(value = "/user")
@@ -71,9 +65,10 @@ public class UserController {
     private TenantService tenantService;
 
     @Resource
-    private RedisService redisService;
+    private LogService logService;
+
     @Resource
-    private UserComponent userComponent;
+    private RedisService redisService;
 
     private static String SUCCESS = "操作成功";
     private static String ERROR = "操作失败";
@@ -95,34 +90,46 @@ public class UserController {
         }
         return res;
     }
-    /**
-     * 获取用户信息
-     * @return 返回插件信息
-     */
-    @GetMapping(value = "/list")
-    @ApiOperation(value = "获取用户信息")
-    public BaseResponseInfo getPluginInfo(@RequestParam(value = "search",required = false) String search,
-                                          @RequestParam("currentPage") Integer currentPage,
-                                          @RequestParam("pageSize") Integer pageSize,
-                                          HttpServletRequest request) throws Exception{
+
+    @PostMapping(value = "/weixinLogin")
+    @ApiOperation(value = "微信登录")
+    public BaseResponseInfo weixinLogin(@RequestBody JSONObject jsonObject,
+                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
         try {
-            Map<String,String> param = new HashMap<>();
-            param.put(Constants.SEARCH,search);
-            param.put("currentPage",""+currentPage);
-            param.put("pageSize",""+pageSize);
-            List resList = userComponent.select(param);
-            map.put("rows", resList);
-            map.put("total", resList.size());
-            res.code = 200;
-            res.data = map;
+            String weixinCode = jsonObject.getString("weixinCode");
+            User user = userService.getUserByWeixinCode(weixinCode);
+            if(user == null) {
+                res.code = 501;
+                res.data = "微信未绑定";
+            } else {
+                Map<String, Object> data = userService.login(user, request);
+                res.code = 200;
+                res.data = data;
+            }
         } catch(Exception e){
             e.printStackTrace();
+            logger.error(e.getMessage());
             res.code = 500;
-            res.data = "获取数据失败";
+            res.data = "用户登录失败";
         }
         return res;
+    }
+
+    @PostMapping(value = "/weixinBind")
+    @ApiOperation(value = "绑定微信")
+    public String weixinBind(@RequestBody JSONObject jsonObject,
+                             HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String loginName = jsonObject.getString("loginName");
+        String password = jsonObject.getString("password");
+        String weixinCode = jsonObject.getString("weixinCode");
+        int res = userService.weixinBind(loginName, password, weixinCode);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 
     @GetMapping(value = "/getUserSession")
@@ -157,52 +164,6 @@ public class UserController {
             e.printStackTrace();
             res.code = 500;
             res.data = "退出失败";
-        }
-        return res;
-    }
-
-
-    /**
-     * 删除用户列表
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @DeleteMapping(value = "/delete")
-    @ApiOperation(value = "删除用户列表")
-    public BaseResponseInfo deleteUnit(Long id, HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            int result = userService.deleteUser(id,request);
-            res.code = 200;
-            res.data = result;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "删除用户失败";
-        }
-        return res;
-    }
-
-
-    /**
-     * 批量删除用户列表
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @DeleteMapping(value = "/deleteBatch")
-    @ApiOperation(value = "批量删除用户列表")
-    public BaseResponseInfo batchDeleteUnit(String ids,HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            int result = userService.batchDeleteUser(ids,request);
-            res.code = 200;
-            res.data = result;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "批量删除用户失败";
         }
         return res;
     }
@@ -336,7 +297,6 @@ public class UserController {
         return result;
     }
 
-
     /**
      * create by: cjl
      * description:
@@ -354,7 +314,6 @@ public class UserController {
         userService.updateUserAndOrgUserRel(ue, request);
         return result;
     }
-
 
     /**
      * 注册用户
@@ -378,7 +337,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
-    @GetMapping("/getOrganizationUserTree")
+    @RequestMapping("/getOrganizationUserTree")
     @ApiOperation(value = "获取机构用户树")
     public JSONArray getOrganizationUserTree()throws Exception{
         JSONArray arr=new JSONArray();

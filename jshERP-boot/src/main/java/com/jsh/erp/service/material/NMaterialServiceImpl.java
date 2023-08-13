@@ -15,11 +15,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
+import com.jsh.erp.datasource.mappers.NMaterialMapper;
 import com.jsh.erp.datasource.mappers.UnitMapper;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.log.LogService;
-import com.jsh.erp.service.material.Interface.IMaterialService;
+import com.jsh.erp.service.material.Interface.INMaterialService;
+import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.materialCategory.Interface.IMaterialCategoryService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.StringUtil;
@@ -28,8 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> implements IMaterialService {
+@Service()
+public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material> implements INMaterialService {
 
     private final static String LOGNAME = "商品";
 
