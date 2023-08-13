@@ -13,10 +13,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import com.jsh.erp.datasource.entities.Depot;
+import com.jsh.erp.service.depot.DepotComponent;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.material.Interface.IMaterialService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +46,8 @@ public class DepotController {
 
     @Resource
     private DepotService depotService;
-
+    @Resource
+    private DepotComponent depotComponent;
     @Resource
     private UserBusinessService userBusinessService;
 
@@ -65,6 +68,36 @@ public class DepotController {
             List<Depot> depotList = depotService.getAllList();
             res.code = 200;
             res.data = depotList;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 获取仓库信息
+     * @return 返回插件信息
+     */
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取仓库信息")
+    public BaseResponseInfo getPluginInfo(@RequestParam(value = "search",required = false) String search,
+                                          @RequestParam("currentPage") Integer currentPage,
+                                          @RequestParam("pageSize") Integer pageSize,
+                                          HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            Map<String,String> param = new HashMap<>();
+            param.put(Constants.SEARCH,search);
+            param.put("currentPage",""+currentPage);
+            param.put("pageSize",""+pageSize);
+            List resList = depotComponent.select(param);
+            map.put("rows", resList);
+            map.put("total", resList.size());
+            res.code = 200;
+            res.data = map;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
@@ -159,7 +192,7 @@ public class DepotController {
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
-            res.data = "批量删除单位失败";
+            res.data = "批量删除仓库失败";
         }
         return res;
     }

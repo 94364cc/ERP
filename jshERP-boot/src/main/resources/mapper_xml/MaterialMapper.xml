@@ -11,5 +11,7 @@
         <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
         <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag"/>
     </resultMap>
-
+    <sql id="Base_Column_List">
+        id, category_id, name,  model, standard,  remark,  unit_id,  tenant_id, delete_flag
+    </sql>
 </mapper>
