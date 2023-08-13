@@ -188,7 +188,7 @@ public class MaterialCategoryController {
     @DeleteMapping(value = "/deleteBatch")
     @ApiOperation(value = "批量删除商品分类")
     public BaseResponseInfo batchDeleteUnit(String ids) throws Exception{
-        int result = materialCategoryService.batchDeleteMaterialCategoryByIds(ids);
+        materialCategoryService.batchDeleteMaterialCategoryByIds(ids);
         return BaseResponseInfo.failure("批量删除商品分类失败");
     }
 
