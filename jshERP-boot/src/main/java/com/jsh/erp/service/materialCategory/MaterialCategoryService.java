@@ -42,6 +42,8 @@ public class MaterialCategoryService {
     @Resource
     private MaterialMapperEx materialMapperEx;
 
+
+
     public MaterialCategory getMaterialCategory(long id)throws Exception {
         MaterialCategory result=null;
         try{

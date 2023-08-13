@@ -53,7 +53,11 @@ public class BaseResponseInfo {
 	}
 
 	public static <T> BaseResponseInfo failure() {
-		return new BaseResponseInfo(ResultEnum.SUCCESS.getCode(),ResultEnum.FAILURE.getMessage());
+		return new BaseResponseInfo(ResultEnum.FAILURE.getCode(),ResultEnum.FAILURE.getMessage());
+	}
+
+	public static <T> BaseResponseInfo failure(String message) {
+		return new BaseResponseInfo(ResultEnum.FAILURE.getCode(),message);
 	}
 
 }

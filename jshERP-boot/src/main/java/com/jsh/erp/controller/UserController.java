@@ -355,6 +355,7 @@ public class UserController {
         return result;
     }
 
+
     /**
      * 注册用户
      * @param ue
