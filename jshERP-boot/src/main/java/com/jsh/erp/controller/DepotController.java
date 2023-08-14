@@ -51,9 +51,6 @@ public class DepotController {
     @Resource
     private UserBusinessService userBusinessService;
 
-    @Resource
-    private INMaterialService materialService;
-
     /**
      * 仓库列表
      * @param request

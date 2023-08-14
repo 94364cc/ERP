@@ -66,7 +66,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service(value = "nMaterialService")
+@Service
 public class MaterialService {
     private Logger logger = LoggerFactory.getLogger(MaterialService.class);
 
