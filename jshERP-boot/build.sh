@@ -1,6 +1,6 @@
 #!/bin/bash
 # 此脚本可用来本地打包并构建镜像
-image=erp
+image=erp-svc
 version=1.0.0
 
 sudo docker buildx inspect --bootstrap

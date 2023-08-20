@@ -15,7 +15,7 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
-    <select id="getMaterialListByUnitIds"  resultMap="com.jsh.erp.datasource.entities.Material">
+    <select id="getMaterialListByUnitIds"  resultType="com.jsh.erp.datasource.entities.Material">
         select
         <include refid="com.jsh.erp.datasource.mappers.MaterialMapper.Base_Column_List" />
         from jsh_material
