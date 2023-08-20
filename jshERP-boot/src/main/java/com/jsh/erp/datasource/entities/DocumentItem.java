@@ -20,12 +20,16 @@ public class DocumentItem {
     private Long id;
 
     @ApiModelProperty(value = "主体id")
-    @TableField(value = "header_id")
-    private Long headerId;
+    @TableField(value = "head_id")
+    private Long headId;
 
     @ApiModelProperty(value = "商品id")
     @TableField(value = "material_id")
     private Long materialId;
+
+    @ApiModelProperty(value = "商品id")
+    @TableField(exist = false)
+    private String materialName;
 
     @ApiModelProperty(value = "数量")
     @TableField(value = "oper_number")
@@ -39,9 +43,17 @@ public class DocumentItem {
     @TableField(value = "depot_id")
     private Long depotId;
 
+    @ApiModelProperty(value = "仓库名称")
+    @TableField(exist = false)
+    private String depotName;
+
     @ApiModelProperty(value = "调拨时，对方仓库Id")
     @TableField(value = "another_depot_id")
     private Long anotherDepotId;
+
+    @ApiModelProperty(value = "仓库名称")
+    @TableField(exist = false)
+    private String anotherDepotName;
 
     @ApiModelProperty(value = "批号")
     @TableField(value = "batch_number")

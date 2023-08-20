@@ -51,7 +51,6 @@ public class SupplierService {
 
     @Resource
     private SupplierMapper supplierMapper;
-
     @Resource
     private SupplierMapperEx supplierMapperEx;
     @Resource
@@ -73,7 +72,7 @@ public class SupplierService {
     @Resource
     private UserBusinessService userBusinessService;
 
-    public Supplier getSupplier(long id)throws Exception {
+    public Supplier getSupplier(long id){
         Supplier result=null;
         try{
             result=supplierMapper.selectByPrimaryKey(id);

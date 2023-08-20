@@ -22,19 +22,23 @@ public class DocumentHead {
 
     @ApiModelProperty(value = "票据号")
     @TableField(value = "number")
-    private Long number;
+    private String number;
 
-    @ApiModelProperty(value = "类型(出库/入库/库存盘点单/退货入库/库存调拨)")
+    @ApiModelProperty(value = "类型(1-出库 2-入库 3-库存盘点单 4-退货入库 5-库存调拨)")
     @TableField(value = "type")
-    private Long type;
+    private Integer type;
 
-    @ApiModelProperty(value = "仓库id")
-    @TableField(value = "depot_id")
-    private BigDecimal depotId;
+    @ApiModelProperty(value = "类型名称")
+    @TableField(exist = false)
+    private String typeName;
 
     @ApiModelProperty(value = "入库单，包类型 1-全托 2-半托")
     @TableField(value="package_type")
     private Integer packageType;
+
+    @ApiModelProperty(value = "入库单，包类型 1-全托 2-半托")
+    @TableField(exist = false)
+    private String packageTypeName;
 
     @ApiModelProperty(value = "客户id")
     @TableField(value = "supplier_id")
@@ -46,7 +50,7 @@ public class DocumentHead {
 
     @ApiModelProperty(value = "创建时间")
     @TableField(value = "create_time")
-    private LocalDateTime createTime;
+    private LocalDate createTime;
 
     @ApiModelProperty(value = "创建人")
     @TableField(value = "creator")

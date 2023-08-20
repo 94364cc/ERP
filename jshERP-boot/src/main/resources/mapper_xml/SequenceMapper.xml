@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.SequenceMapper">
+
+  
+  <select id="getMaxCurrentVal" resultType="com.jsh.erp.datasource.entities.Sequence">
+    select id,ifnull(current_val,0) currentVal,increment_val incrementVal from jsh_sequence where date = #{date} and seq_name= #{seqName}
+  </select>
+
+
+  <update id="addMaxCurrentVal" >
+    update jsh_sequence set current_val = #{newMaxCurrentVal} where id = #{id} and current_val = #{oldMaxCurrentVal}
+  </update>
+</mapper>

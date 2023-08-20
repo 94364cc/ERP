@@ -462,10 +462,16 @@ public class UserService {
      * @Param:
      * @return com.jsh.erp.datasource.entities.User
      */
-    public User getCurrentUser()throws Exception{
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        Long userId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userId").toString());
-        return getUser(userId);
+    public User getCurrentUser(){
+        User user = null;
+        try {
+            HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            Long userId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userId").toString());
+            user = getUser(userId);
+        }catch (Exception e){
+            throw new BusinessRunTimeException(500,"获取当前登录信息失败");
+        }
+        return user;
     }
 
     /**
