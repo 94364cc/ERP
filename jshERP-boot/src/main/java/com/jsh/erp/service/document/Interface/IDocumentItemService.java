@@ -14,10 +14,28 @@ public interface IDocumentItemService extends IService<DocumentItem> {
      */
     void add(DocumentItem documentItem);
 
+    /**
+     * 新更新单据详情
+     * @param documentItem
+     */
+    void update(DocumentItem documentItem);
+
+    /**
+     * 新更新单据详情
+     * @param id
+     */
+    void delete(Long id);
+
+    /**
+     * 新更新单据详情
+     * @param headId
+     */
+    void deleteByHeadId(Long headId);
+
 
     /**
      * 根据主体id获取详情列表
      * @param headId
      */
-    List<DocumentItem> getByHeadId(Long headId);
+    List<DocumentItem> getByHeadId(Long headId) throws Exception;
 }

@@ -2,7 +2,10 @@ package com.jsh.erp.service.depot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DepotEx;
@@ -69,6 +74,17 @@ public class DepotService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    public Map<Long,String> getMapByIds(List<Long> ids)throws Exception {
+        Map<Long,String> resultMap = new HashMap<>();
+        if(CollUtil.isEmpty(ids)){
+            return resultMap;
+        }
+        String idsStr =StrUtil.join(",",ids);
+        List<Depot> depotList = this.getDepotListByIds(idsStr);
+        resultMap = depotList.stream().collect(Collectors.toMap(Depot::getId,Depot::getName));
+        return resultMap;
     }
 
     public List<Depot> getDepot()throws Exception {

@@ -1,6 +1,8 @@
 package com.jsh.erp.service.document;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -48,31 +50,72 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
     }
 
     /**
+     * 修改
+     * @param documentItem
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(DocumentItem documentItem){
+        this.update(documentItem);
+
+        //记录日志
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_EDIT);
+        logService.insertLog(LOG_NAME, sb.toString());
+    }
+
+    /**
+     * 删除
+     * @param id
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void delete(Long id){
+        this.removeById(id);
+
+        //记录日志
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        logService.insertLog(LOG_NAME, sb.toString());
+    }
+
+
+    /**
+     * 删除
+     * @param headId
+     */
+    @Override
+    public void deleteByHeadId(Long headId){
+        this.remove(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
+    }
+
+    /**
      * 根据主体id获取详情列表
      * @param headId
      * @return
      */
     @Override
-    public List<DocumentItem> getByHeadId(Long headId) {
+    public List<DocumentItem> getByHeadId(Long headId) throws Exception {
         List<DocumentItem> documentItems =  this.list(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
         if(CollUtil.isEmpty(documentItems)){
             return documentItems;
         }
+        List<Long> materialIds = documentItems.stream().map(DocumentItem::getId).collect(Collectors.toList());
+        Map<Long,String> materialMap = materialService.getMayByIds(materialIds);
+
+        //仓库
+        List<Long> depotIds = documentItems.stream().map(DocumentItem::getDepotId).collect(Collectors.toList());
+        List<Long> anotherDepotIds = documentItems.stream()
+            .filter(depotId -> ObjectUtil.isNotNull(depotId))
+            .map(DocumentItem::getDepotId)
+            .collect(Collectors.toList());
+        depotIds.addAll(anotherDepotIds);
+        Map<Long,String> depotMap = depotService.getMapByIds(depotIds);
 
         for(DocumentItem documentItem : documentItems){
-            Material material = materialService.getById(documentItem.getMaterialId());
-            if(ObjectUtil.isNotNull(material)){
-                documentItem.setMaterialName(material.getName());
-            }
-            Depot depot = depotService.getDepot(documentItem.getDepotId());
-            if(ObjectUtil.isNotNull(depot)){
-                documentItem.setDepotName(depot.getName());
-            }
-
-            Depot antherDepotName = depotService.getDepot(documentItem.getAnotherDepotId());
-            if(ObjectUtil.isNotNull(antherDepotName)){
-                documentItem.setDepotName(antherDepotName.getName());
-            }
+            documentItem.setMaterialName(materialMap.get(documentItem.getMaterialId()));
+            documentItem.setDepotName(depotMap.get(documentItem.getDepotId()));
+            documentItem.setDepotName(depotMap.get(documentItem.getAnotherDepotId()));
         }
         return documentItems;
     }

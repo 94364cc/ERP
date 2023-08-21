@@ -17,16 +17,21 @@ import com.jsh.erp.datasource.page.DocumentHeadPage;
 import com.jsh.erp.datasource.vo.DocumentHeadPageVO;
 import com.jsh.erp.datasource.vo.DocumentHeadVO;
 import com.jsh.erp.service.depot.DepotService;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.document.Interface.IDocumentHeadService;
+import com.jsh.erp.service.document.Interface.IDocumentItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.supplier.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMapper, DocumentHead> implements IDocumentHeadService {
     @Autowired
     SupplierService supplierService;
     @Autowired
-    DepotService depotService;
+    IDocumentItemService documentItemService;
+    @Autowired
+    DepotItemService depotItemService;
     @Autowired
     MaterialService materialService;
 
@@ -58,6 +63,19 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
 
         }
         return documentHeadPageVOS;
+    }
+
+    /**
+     * 删除单子
+     * @param id
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteDocumentHead(Long id) {
+        //删除详情单子
+        documentItemService.deleteByHeadId(id);
+        //删除主体单子
+        this.deleteDocumentHead(id);
     }
 
     @Override

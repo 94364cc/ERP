@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,16 +64,59 @@ public class DocumentHeadController {
 
 
     /**
-     * 单位列表
+     * 新增制单
      * @param documentHead
      * @return
      * @throws Exception
      */
     @PostMapping(value = "/add")
     @ApiOperation(value = "新增制单")
-    public BaseResponseInfo insertUnit(@RequestBody DocumentHead documentHead) throws Exception{
+    public BaseResponseInfo insert(@RequestBody DocumentHead documentHead) throws Exception{
         IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(documentHead.getType());
         documentHeadService.add(documentHead);
+        return BaseResponseInfo.success();
+    }
+
+    /**
+     * 新增制单
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @GetMapping
+    @ApiOperation(value = "根据id查询单子")
+    public BaseResponseInfo getById(@RequestParam("id")Long id,@RequestParam("type") Integer type) throws Exception{
+        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(type);
+        documentHeadService.getDocumentHeadById(id);
+        return BaseResponseInfo.success();
+    }
+
+    /**
+     * 修改制单
+     * @param documentHead
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/update")
+    @ApiOperation(value = "修改制单")
+    public BaseResponseInfo update(@RequestBody DocumentHead documentHead) throws Exception{
+        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(documentHead.getType());
+        documentHeadService.updateDocumentHead(documentHead);
+        return BaseResponseInfo.success();
+    }
+
+
+    /**
+     * 删除制单
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/delete/{id}")
+    @ApiOperation(value = "删除制单")
+    public BaseResponseInfo delete(@PathVariable("id") Long id,@RequestParam Integer type) throws Exception{
+        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(type);
+        documentHeadService.deleteDocumentHead(id);
         return BaseResponseInfo.success();
     }
 

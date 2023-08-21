@@ -57,6 +57,20 @@ public class InDocumentHeadService extends AbsDocumentHeadService implements Ini
         logService.insertLog(DocumentTypeEnum.getNameById(documentHead.getType()), sb.toString());
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateDocumentHead(DocumentHead documentHead){
+        this.checkParams(documentHead);
+        //新增单子主体表
+        this.updateById(documentHead);
+
+        //记录日志
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_EDIT);
+        logService.insertLog(DocumentTypeEnum.getNameById(documentHead.getType()), sb.toString());
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         DocumentStrategyFactory.register(DocumentTypeEnum.IN.getType(),this);

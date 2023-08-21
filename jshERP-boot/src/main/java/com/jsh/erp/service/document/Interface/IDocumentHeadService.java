@@ -28,6 +28,18 @@ public interface IDocumentHeadService extends IService<DocumentHead> {
     void add(DocumentHead documentHead);
 
     /**
+     * 更新单子
+     * @return
+     */
+    void updateDocumentHead(DocumentHead documentHead);
+
+    /**
+     * 删除单子
+     * @return
+     */
+    void deleteDocumentHead(Long id);
+
+    /**
      * 新增单子
      * @return
      */

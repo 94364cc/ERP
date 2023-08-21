@@ -20,7 +20,7 @@ public class DocumentHead {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "票据号")
+    @ApiModelProperty(value = "单号")
     @TableField(value = "number")
     private String number;
 

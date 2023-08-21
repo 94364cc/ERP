@@ -144,6 +144,17 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
     }
 
     /**
+     * 根据ids查询map<id,name>
+     * @param ids
+     * @return
+     */
+    @Override
+    public Map<Long, String> getMayByIds(List<Long> ids) {
+        List<Material> materialList = this.listByIds(ids);
+        return materialList.stream().collect(Collectors.toMap(Material::getId,Material::getName));
+    }
+
+    /**
      * 校验数据唯一
      * @param material
      */
