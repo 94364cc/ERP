@@ -10,7 +10,7 @@ public class ExceptionConstants {
      * */
 
     public static final String GLOBAL_RETURNS_CODE = "code";
-    public static final String GLOBAL_RETURNS_MESSAGE = "msg";
+    public static final String GLOBAL_RETURNS_MESSAGE = "message";
     public static final String GLOBAL_RETURNS_DATA = "data";
 
     /**

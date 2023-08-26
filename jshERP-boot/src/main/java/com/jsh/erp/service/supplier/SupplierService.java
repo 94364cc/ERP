@@ -308,7 +308,7 @@ public class SupplierService {
 
     public List<Supplier> findBySelectSup()throws Exception {
         SupplierExample example = new SupplierExample();
-        example.createCriteria().andTypeLike("供应商").andEnabledEqualTo(true)
+        example.createCriteria().andEnabledEqualTo(true)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("sort asc, id desc");
         List<Supplier> list=null;

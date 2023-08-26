@@ -90,11 +90,10 @@ public class MaterialCategoryController {
     @PostMapping("/add")
     @ApiOperation(value = "新增商品分类")
     @ResponseBody
-    public Object addUser(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception{
-        JSONObject result = ExceptionConstants.standardSuccess();
+    public BaseResponseInfo addUser(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception{
         MaterialCategory mc= JSONObject.parseObject(obj.toJSONString(), MaterialCategory.class);
         materialCategoryService.addMaterialCategory(mc);
-        return result;
+        return BaseResponseInfo.success();
     }
     /**
      * 根据id来查询商品名称
@@ -189,7 +188,7 @@ public class MaterialCategoryController {
     @ApiOperation(value = "批量删除商品分类")
     public BaseResponseInfo batchDeleteUnit(String ids) throws Exception{
         materialCategoryService.batchDeleteMaterialCategoryByIds(ids);
-        return BaseResponseInfo.failure("批量删除商品分类失败");
+        return BaseResponseInfo.success();
     }
 
     /**
