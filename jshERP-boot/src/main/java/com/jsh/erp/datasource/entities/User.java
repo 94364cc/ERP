@@ -31,7 +31,7 @@ public class User {
 
     private String weixinOpenId;
 
-    private Long tenantId;
+    private Long tenantId =1L;
 
     public Long getId() {
         return id;

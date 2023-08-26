@@ -522,14 +522,6 @@ public class UserService {
                 //如果没有选择机构，就不建机构和用户的关联关系
                 return;
             }
-            if(ue.getOrgaId()!=null && "1".equals(ue.getLeaderFlag())){
-                //检查当前机构是否存在经理
-                List<User> checkList = userMapperEx.getListByOrgaId(ue.getId(), ue.getOrgaId());
-                if(checkList.size()>0) {
-                    throw new BusinessRunTimeException(ExceptionConstants.USER_LEADER_IS_EXIST_CODE,
-                            ExceptionConstants.USER_LEADER_IS_EXIST_MSG);
-                }
-            }
             //新增用户和机构关联关系
             OrgaUserRel oul=new OrgaUserRel();
             //机构id

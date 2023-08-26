@@ -44,13 +44,13 @@ public class DocumentHeadController {
     @GetMapping(value = "/list")
     @ApiOperation(value = "获取单据信息")
     public BaseResponseInfo getPluginInfo(@RequestParam(value = "search",required = false) String search,
-                                          @RequestParam("type") Integer type,
                                           @RequestParam("currentPage") Integer currentPage,
                                           @RequestParam("pageSize") Integer pageSize) throws Exception{
         String supplierId = StringUtil.getInfo(search, "supplierId");
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
+        String type = StringUtil.getInfo(search, "type");
         DocumentHeadPage documentHeadPage = new DocumentHeadPage();
         documentHeadPage.setBeginDate(beginTime);
         documentHeadPage.setCurrent(currentPage);
@@ -58,7 +58,7 @@ public class DocumentHeadController {
         documentHeadPage.setEndDate(endTime);
         documentHeadPage.setSupplierId(supplierId);
         documentHeadPage.setNumber(number);
-        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(type);
+        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(Integer.parseInt(type));
         return BaseResponseInfo.data(documentHeadService.getPage(documentHeadPage));
     }
 
