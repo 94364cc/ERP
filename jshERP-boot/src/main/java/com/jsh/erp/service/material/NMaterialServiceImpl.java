@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material> implements INMaterialService {
 
     private final static String LOGNAME = "商品";
-    private static final Pattern pattern = Pattern.compile("^[1-9]\\d*$");
+    private static final Pattern pattern = Pattern.compile("^\\d*(\\.\\d{1,20})?$");
 
 
     @Autowired
@@ -176,7 +176,7 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
     private void validRepeat(Material material) {
         //校验箱体规格
         String standard = material.getStandard();
-        String[] numbers = standard.split("/^((([^0][0-9]+|0)\\.([0-9]{1,2}))$)|^(([1-9]+)\\.([0-9]{1,2})$)/");
+        String[] numbers = standard.split("\\*");
         ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(numbers.length==3);
         for(String number : numbers){
             ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(pattern.matcher(number).matches());

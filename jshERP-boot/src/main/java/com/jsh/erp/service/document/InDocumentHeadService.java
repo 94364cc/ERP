@@ -2,6 +2,7 @@ package com.jsh.erp.service.document;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -11,6 +12,7 @@ import com.jsh.erp.datasource.enumPackage.DocumentTypeEnum;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.enumPackage.PackageTypeEnum;
+import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 import com.jsh.erp.datasource.vo.DocumentPrintVO;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.depot.DepotService;
@@ -128,7 +130,7 @@ public class InDocumentHeadService extends AbsDocumentHeadService implements Ini
             documentPrintVO.setTelephone(supplier.getTelephone());
         }
         //根据单据id查询详情
-
+        List<DocumentItemPrintVO> documentItemPrintVOList =documentItemService.printByHeadId(id);
         //汇总计算数量和立方数
         return null;
     }
