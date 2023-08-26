@@ -12,8 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DocumentTypeEnum {
 
-    IN(1, "入库单"),
-    OUT(2, "出库单"),
+    OUT(1, "出库单"),
+    IN(2, "入库单"),
     CHECK(3, "库存盘点单"),
     RETURN(4, "退货入库"),
     TRANSFOR(5, "库存调拨"),
