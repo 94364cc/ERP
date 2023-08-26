@@ -1,11 +1,13 @@
 package com.jsh.erp.service.document;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
@@ -13,11 +15,13 @@ import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.mappers.DocumentItemMapper;
+import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.document.Interface.IDocumentItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,20 +118,52 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
         Map<Long,String> depotMap = depotService.getMapByIds(depotIds);
 
         for(DocumentItem documentItem : documentItems){
-            documentItem.setMaterialName(materialMap.get(documentItem.getMaterialId()));
+            documentItem.setModel(materialMap.get(documentItem.getMaterialId()));
             documentItem.setDepotName(depotMap.get(documentItem.getDepotId()));
-            documentItem.setDepotName(depotMap.get(documentItem.getAnotherDepotId()));
+            documentItem.setAnotherDepotName(depotMap.get(documentItem.getAnotherDepotId()));
         }
         return documentItems;
     }
 
     /**
-     * 根据主体id获取数量
+     * 打印
      * @param headId
      * @return
      */
     @Override
-    public Integer countByHeadId(Long headId) {
-        return this.count(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
+    public List<DocumentItemPrintVO> printByHeadId(Long headId) {
+        List<DocumentItemPrintVO> documentItemPrintVOList = CollUtil.newArrayList();
+        List<DocumentItem> documentItems =  this.list(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
+        if(CollUtil.isEmpty(documentItems)){
+            return documentItemPrintVOList;
+        }
+        List<Long> materialIds = documentItems.stream().map(DocumentItem::getId).collect(Collectors.toList());
+        Map<Long,Material> materialMap = materialService.getEntityMayByIds(materialIds);
+
+        //仓库
+        List<Long> depotIds = documentItems.stream().map(DocumentItem::getDepotId).collect(Collectors.toList());
+        List<Long> anotherDepotIds = documentItems.stream()
+            .filter(depotId -> ObjectUtil.isNotNull(depotId))
+            .map(DocumentItem::getDepotId)
+            .collect(Collectors.toList());
+        depotIds.addAll(anotherDepotIds);
+        Map<Long,String> depotMap = depotService.getMapByIds(depotIds);
+
+        for(DocumentItem documentItem : documentItems){
+            DocumentItemPrintVO documentItemPrintVO =new DocumentItemPrintVO();
+            documentItemPrintVO.setOperNumber(documentItem.getOperNumber());
+            //库房
+            documentItemPrintVO.setDepotName(depotMap.get(documentItem.getDepotId()));
+            //备注
+            documentItemPrintVO.setRemark(documentItem.getRemark());
+            //获取箱规和款号
+            Material material = materialMap.get(documentItem.getMaterialId());
+            documentItemPrintVO.setModel(material.getModel());
+            BigDecimal volumn = StringUtil.standard2Volume(material.getStandard());
+            documentItemPrintVO.setVolume(volumn);
+            documentItemPrintVOList.add(documentItemPrintVO);
+        }
+        return documentItemPrintVOList;
     }
+
 }

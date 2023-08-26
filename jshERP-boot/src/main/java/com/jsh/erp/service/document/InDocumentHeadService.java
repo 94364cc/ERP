@@ -3,11 +3,15 @@ package com.jsh.erp.service.document;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.enumPackage.DocumentTypeEnum;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.enumPackage.PackageTypeEnum;
+import com.jsh.erp.datasource.vo.DocumentPrintVO;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.log.LogService;
@@ -96,5 +100,36 @@ public class InDocumentHeadService extends AbsDocumentHeadService implements Ini
             maxStr = "0"+maxCurentVal;
         }
         return "IN-"+supplierId+dateStr+maxStr;
+    }
+
+    /**
+     * 打印
+     * @param id
+     * @return
+     */
+    @Override
+    public DocumentPrintVO print(Long id) {
+        DocumentPrintVO documentPrintVO = new DocumentPrintVO();
+        //根据id获取单据信息
+        DocumentHead documentHead = this.getById(id);
+        if(ObjectUtil.isNull(documentHead)){
+            return documentPrintVO;
+        }
+
+        BeanUtil.copyProperties(documentHead,documentPrintVO);
+        //-填充单据信息
+        documentPrintVO.setTypeName(DocumentTypeEnum.getNameById(documentHead.getType()));
+        documentPrintVO.setPackageTypeName(PackageTypeEnum.getNameById(documentHead.getPackageType()));
+        //-填充用户信息
+        Long supplierId = documentHead.getSupplierId();
+        Supplier supplier = supplierService.getSupplier(supplierId);
+        if(ObjectUtil.isNotNull(supplier)){
+            documentPrintVO.setSupplierName(supplier.getSupplier());
+            documentPrintVO.setTelephone(supplier.getTelephone());
+        }
+        //根据单据id查询详情
+
+        //汇总计算数量和立方数
+        return null;
     }
 }

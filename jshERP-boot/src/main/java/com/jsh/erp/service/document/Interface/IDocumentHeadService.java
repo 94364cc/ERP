@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.page.DocumentHeadPage;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.datasource.vo.DocumentHeadPageVO;
 import com.jsh.erp.datasource.vo.DocumentHeadVO;
+import com.jsh.erp.datasource.vo.DocumentPrintVO;
 
 public interface IDocumentHeadService extends IService<DocumentHead> {
 
@@ -40,9 +41,17 @@ public interface IDocumentHeadService extends IService<DocumentHead> {
     void deleteDocumentHead(Long id);
 
     /**
-     * 新增单子
+     * 根据id获取详情
      * @return
      */
     DocumentHeadVO getDocumentHeadById(Long id);
+
+
+
+    /**
+     * 打印详情
+     * @return
+     */
+    DocumentPrintVO print(Long id);
 
 }

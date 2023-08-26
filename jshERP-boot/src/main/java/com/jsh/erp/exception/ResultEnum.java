@@ -23,6 +23,7 @@ public enum ResultEnum implements ResultExceptionAssert {
     NOT_FOUND_ERROR(4004, "服务未找到"),
 
     MATERIAL_SAVE_ERROR(1001,"商品已经存在"),
+    MATERIAL_STANDARD_ERROR(1002,"箱规填写不合规"),
     DOCUMENT_SEQENCE_ERROR(2001,"获取单据最大序列号失败"),
     DOCUMENT_SUPPLIER_ERROR(2002,"请填写客户编号"),
     DOCUMENT_DOCUMENT_ERROR(2002,"请填写仓库编号"),

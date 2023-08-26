@@ -2,6 +2,8 @@ package com.jsh.erp.datasource.entities;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotBlank;
+
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -29,7 +31,7 @@ public class Material {
     @TableField(value = "category_id")
     private Long categoryId;
 
-    @ApiModelProperty(value = "列表id")
+    @ApiModelProperty(value = "商品类别名称")
     @TableField(exist = false)
     private String categoryName;
 
@@ -37,7 +39,8 @@ public class Material {
     @TableField(value = "model")
     private String model;
 
-    @ApiModelProperty(value = "单位体积，单位立方米")
+    @NotBlank(message = "箱规不能为空")
+    @ApiModelProperty(value = "箱规，长*宽*高")
     @TableField(value = "standard")
     private String standard;
 

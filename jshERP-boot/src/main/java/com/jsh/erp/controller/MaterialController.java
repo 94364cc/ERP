@@ -3,10 +3,12 @@ package com.jsh.erp.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.service.material.Interface.INMaterialService;
+import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
@@ -32,7 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MaterialController {
 
     @Autowired
-    private INMaterialService materialService;
+    private INMaterialService nMaterialService;
+
 
 
     /**
@@ -42,8 +45,8 @@ public class MaterialController {
      */
     @PostMapping(value = "/add")
     @ApiOperation(value = "添加商品")
-    public BaseResponseInfo add(@RequestBody Material material) throws Exception{
-        materialService.insertMaterial(material);
+    public BaseResponseInfo add(@Valid @RequestBody Material material) throws Exception{
+        nMaterialService.insertMaterial(material);
         return BaseResponseInfo.success();
     }
 
@@ -55,7 +58,7 @@ public class MaterialController {
     @PutMapping(value = "/update")
     @ApiOperation(value = "更新商品")
     public BaseResponseInfo update(@RequestBody Material material) throws Exception{
-        materialService.updateMaterial(material);
+        nMaterialService.updateMaterial(material);
         return BaseResponseInfo.success();
     }
 
@@ -68,7 +71,7 @@ public class MaterialController {
     @ApiOperation(value = "批量删除商品")
     public BaseResponseInfo delete(@RequestParam String ids) throws Exception{
         List<Long> idList = StringUtil.split2List(ids);
-        materialService.batchDeleteMaterial(idList);
+        nMaterialService.batchDeleteMaterial(idList);
         return BaseResponseInfo.success();
     }
 
@@ -81,7 +84,7 @@ public class MaterialController {
     @DeleteMapping(value = "/delete")
     @ApiOperation(value = "删除商品")
     public BaseResponseInfo delete(@RequestParam Long id) throws Exception{
-        materialService.deleteMaterial(id);
+        nMaterialService.deleteMaterial(id);
         return BaseResponseInfo.success();
     }
 
@@ -93,8 +96,7 @@ public class MaterialController {
     @GetMapping(value = "/list")
     @ApiOperation(value = "查看商品分页")
     public BaseResponseInfo getPage(MaterialPage materialPage){
-        return BaseResponseInfo.data(materialService.getPage(materialPage));
+        return BaseResponseInfo.data(nMaterialService.getPage(materialPage));
     }
-
 
 }

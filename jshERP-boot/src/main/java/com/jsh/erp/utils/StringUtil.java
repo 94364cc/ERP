@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -45,6 +46,12 @@ public class StringUtil {
         }else{
             return source.equals(target);
         }
+    }
+
+    public static BigDecimal standard2Volume(String standard) {
+        String[] numbers = standard.split("\\*");
+        BigDecimal volume = new BigDecimal(numbers[0]).multiply(new BigDecimal(numbers[1])).multiply(new BigDecimal(numbers[2]));
+        return volume.setScale(5, RoundingMode.HALF_UP);
     }
 
 

@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResultException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.OK)
     public BaseResponseInfo handleResultException(ResultException e) {
         log.error("Result exception: [{}]", e.getMessage(), e);
         return new BaseResponseInfo(e.getMessage());

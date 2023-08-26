@@ -133,4 +133,17 @@ public class DocumentHeadController {
         return BaseResponseInfo.data(documentHeadService.getDocumentHeadById(id));
     }
 
+
+    /**
+     * 打印单据信息
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/print")
+    @ApiOperation(value = "打印单据")
+    public BaseResponseInfo print(@RequestParam("id") Long id,Integer type) {
+        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(type);
+        return BaseResponseInfo.data(documentHeadService.print(id));
+    }
 }

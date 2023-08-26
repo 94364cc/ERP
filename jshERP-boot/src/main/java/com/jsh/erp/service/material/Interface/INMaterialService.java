@@ -49,4 +49,13 @@ public interface INMaterialService extends IService<Material> {
      * @return
      */
     Map<Long,String> getMayByIds(List<Long> ids);
+
+
+    /**
+     * 根据ids查询map<id,name>
+     * @param ids
+     * @return
+     */
+    Map<Long,Material> getEntityMayByIds(List<Long> ids);
+
 }

@@ -1,19 +1,14 @@
 package com.jsh.erp.datasource.vo;
 
 import java.time.LocalDate;
+import java.util.List;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DocumentHeadVO {
-
-    @ApiModelProperty(value = "主键ID")
-    private Long id;
+public class DocumentPrintVO {
 
     @ApiModelProperty(value = "票据号")
     private String number;
@@ -23,6 +18,9 @@ public class DocumentHeadVO {
 
     @ApiModelProperty(value = "入库单，包类型 1-全托 2-半托")
     private String packageTypeName;
+
+    @ApiModelProperty(value = "客户手机号")
+    private String telephone;
 
     @ApiModelProperty(value = "客户名称")
     private String supplierName;
@@ -36,8 +34,13 @@ public class DocumentHeadVO {
     @ApiModelProperty(value = "创建人")
     private String creator;
 
-    @ApiModelProperty(value = "备注")
-    private String remark;
+    @ApiModelProperty(value = "单据详情")
+    private List<DocumentItemPrintVO> documentItemPrintVOList;
 
+    @ApiModelProperty(value = "数量汇总")
+    private String countNumber;
+
+    @ApiModelProperty(value = "立方数汇总")
+    private String volumeNumber;
 
 }

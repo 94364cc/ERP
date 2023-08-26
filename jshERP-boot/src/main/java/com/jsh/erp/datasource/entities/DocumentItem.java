@@ -27,13 +27,17 @@ public class DocumentItem {
     @TableField(value = "material_id")
     private Long materialId;
 
-    @ApiModelProperty(value = "商品id")
+    @ApiModelProperty(value = "商品款号")
     @TableField(exist = false)
-    private String materialName;
+    private String model;
 
     @ApiModelProperty(value = "数量")
     @TableField(value = "oper_number")
     private BigDecimal operNumber;
+
+    @ApiModelProperty(value = "箱规 长*宽*高")
+    @TableField(value = "box_size")
+    private String boxSize;
 
     @ApiModelProperty(value = "描述")
     @TableField(value = "remark")

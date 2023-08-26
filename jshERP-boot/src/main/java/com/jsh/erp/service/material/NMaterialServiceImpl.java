@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollUtil;
@@ -34,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material> implements INMaterialService {
 
     private final static String LOGNAME = "商品";
+    private static final Pattern pattern = Pattern.compile("^[1-9]\\d*$");
+
 
     @Autowired
     LogService logService;
@@ -151,7 +155,18 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
     @Override
     public Map<Long, String> getMayByIds(List<Long> ids) {
         List<Material> materialList = this.listByIds(ids);
-        return materialList.stream().collect(Collectors.toMap(Material::getId,Material::getName));
+        return materialList.stream().collect(Collectors.toMap(Material::getId,Material::getModel));
+    }
+
+    /**
+     * 根据ids查询map<id,material>
+     * @param ids
+     * @return
+     */
+    @Override
+    public Map<Long, Material> getEntityMayByIds(List<Long> ids) {
+        List<Material> materialList = this.listByIds(ids);
+        return materialList.stream().collect(Collectors.toMap(Material::getId, Function.identity()));
     }
 
     /**
@@ -159,9 +174,16 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
      * @param material
      */
     private void validRepeat(Material material) {
+        //校验箱体规格
+        String standard = material.getStandard();
+        String[] numbers = standard.split("/^((([^0][0-9]+|0)\\.([0-9]{1,2}))$)|^(([1-9]+)\\.([0-9]{1,2})$)/");
+        ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(numbers.length==3);
+        for(String number : numbers){
+            ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(pattern.matcher(number).matches());
+        }
+
         boolean repeatFlag = false;
         List<Material> organs = this.list(Wrappers.<Material>query().lambda()
-            .eq(Material::getName, material.getName())
             .eq(Material::getModel, material.getModel())
         );
         if (CollUtil.isNotEmpty(organs)) {

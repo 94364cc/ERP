@@ -76,13 +76,18 @@ public class DepotService {
         return list;
     }
 
-    public Map<Long,String> getMapByIds(List<Long> ids)throws Exception {
+    public Map<Long,String> getMapByIds(List<Long> ids) {
         Map<Long,String> resultMap = new HashMap<>();
         if(CollUtil.isEmpty(ids)){
             return resultMap;
         }
         String idsStr =StrUtil.join(",",ids);
-        List<Depot> depotList = this.getDepotListByIds(idsStr);
+        List<Depot> depotList = null;
+        try {
+            depotList = this.getDepotListByIds(idsStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         resultMap = depotList.stream().collect(Collectors.toMap(Depot::getId,Depot::getName));
         return resultMap;
     }

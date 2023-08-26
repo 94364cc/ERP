@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
+import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 
 public interface IDocumentItemService extends IService<DocumentItem> {
 
@@ -41,8 +42,10 @@ public interface IDocumentItemService extends IService<DocumentItem> {
 
 
     /**
-     * 根据主体id获取数量
+     * 根据主体id获取详情列表
      * @param headId
      */
-    Integer countByHeadId(Long headId);
+    List<DocumentItemPrintVO> printByHeadId(Long headId);
+
+
 }
