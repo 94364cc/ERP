@@ -60,7 +60,7 @@ public class DocumentItemController {
     }
 
     /**
-     * 修改制单详情
+     * 删除制单详情
      * @param id
      * @return
      * @throws Exception
