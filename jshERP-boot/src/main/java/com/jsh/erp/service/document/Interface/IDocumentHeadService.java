@@ -19,7 +19,7 @@ public interface IDocumentHeadService extends IService<DocumentHead> {
      * 分页
      * @return
      */
-    List<DocumentHeadPageVO> getPage(DocumentHeadPage documentHeadPage) throws Exception;
+    Page<DocumentHeadPageVO> getPage(DocumentHeadPage documentHeadPage) throws Exception;
 
     /**
      * 新增单子

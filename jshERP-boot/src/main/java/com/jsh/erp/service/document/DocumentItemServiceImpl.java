@@ -49,6 +49,7 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
         logService.insertLog(LOG_NAME, sb.toString());
     }
 
+
     /**
      * 修改
      * @param documentItem
@@ -118,5 +119,15 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
             documentItem.setDepotName(depotMap.get(documentItem.getAnotherDepotId()));
         }
         return documentItems;
+    }
+
+    /**
+     * 根据主体id获取数量
+     * @param headId
+     * @return
+     */
+    @Override
+    public Integer countByHeadId(Long headId) {
+        return this.count(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
     }
 }

@@ -12,7 +12,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DocumentHeadPageVO extends Page<DocumentHead> {
+public class DocumentHeadPageVO  {
+
+    @ApiModelProperty(value = "主键id")
+    private Long id;
+
     @ApiModelProperty(value = "客户id")
     private Long supplierId;
 
@@ -30,4 +34,9 @@ public class DocumentHeadPageVO extends Page<DocumentHead> {
 
     @ApiModelProperty(value = "创建人")
     private String creator;
+
+    @ApiModelProperty(value = "详情数量")
+    private Integer detailCount;
+
+
 }

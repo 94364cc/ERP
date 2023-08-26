@@ -38,4 +38,11 @@ public interface IDocumentItemService extends IService<DocumentItem> {
      * @param headId
      */
     List<DocumentItem> getByHeadId(Long headId) throws Exception;
+
+
+    /**
+     * 根据主体id获取数量
+     * @param headId
+     */
+    Integer countByHeadId(Long headId);
 }

@@ -40,8 +40,8 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
      * @return
      */
     @Override
-    public List<DocumentHeadPageVO> getPage(DocumentHeadPage documentHeadPage) throws Exception {
-        List<DocumentHeadPageVO> documentHeadPageVOS = CollUtil.newArrayList();
+    public Page<DocumentHeadPageVO> getPage(DocumentHeadPage documentHeadPage) throws Exception {
+        Page<DocumentHeadPageVO> documentHeadVoPage = new Page<>(documentHeadPage.getCurrent(),documentHeadPage.getSize());
         Page<DocumentHead> page =  this.page(documentHeadPage,Wrappers.<DocumentHead>lambdaQuery()
             .eq(ObjectUtil.isNotNull(documentHeadPage.getSupplierId()),DocumentHead::getSupplierId,documentHeadPage.getSupplierId())
             .eq(ObjectUtil.isNotNull(documentHeadPage.getNumber()),DocumentHead::getNumber,documentHeadPage.getNumber())
@@ -49,20 +49,26 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
             .le(ObjectUtil.isNotNull(documentHeadPage.getEndDate()),DocumentHead::getCreateTime,documentHeadPage.getEndDate())
         );
 
+        BeanUtil.copyProperties(page,documentHeadPage);
         List<DocumentHead> materialList = page.getRecords();
         if(CollUtil.isEmpty(materialList)){
-            return documentHeadPageVOS;
+            return documentHeadVoPage;
         }
+        List<DocumentHeadPageVO> pageVOS = CollUtil.newArrayList();
+
         for(DocumentHead documentHead : materialList){
             DocumentHeadPageVO documentHeadPageVO = new DocumentHeadPageVO();
             BeanUtil.copyProperties(documentHead,documentHeadPageVO);
-
             //转义客户名称
-            Supplier supplier = supplierService.getSupplier(documentHead.getId());
-            documentHeadPageVO.setSupplierName(supplier.getSupplier());
-
+            Supplier supplier = supplierService.getSupplier(documentHead.getSupplierId());
+            if(ObjectUtil.isNotNull(supplier)){
+                documentHeadPageVO.setSupplierName(supplier.getSupplier());
+            }
+            documentHeadPageVO.setDetailCount(documentItemService.countByHeadId(documentHead.getId()));
+            pageVOS.add(documentHeadPageVO);
         }
-        return documentHeadPageVOS;
+        documentHeadVoPage.setRecords(pageVOS);
+        return documentHeadVoPage;
     }
 
     /**
