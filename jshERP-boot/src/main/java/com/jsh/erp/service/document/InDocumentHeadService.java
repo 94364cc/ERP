@@ -95,6 +95,6 @@ public class InDocumentHeadService extends AbsDocumentHeadService implements Ini
         if(maxCurentVal<10){
             maxStr = "0"+maxCurentVal;
         }
-        return ""+supplierId+dateStr+maxStr;
+        return "IN-"+supplierId+dateStr+maxStr;
     }
 }
