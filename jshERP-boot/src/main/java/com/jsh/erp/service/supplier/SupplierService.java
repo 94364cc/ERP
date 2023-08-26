@@ -22,6 +22,7 @@ import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.mappers.SupplierMapper;
 import com.jsh.erp.datasource.mappers.SupplierMapperEx;
 //import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
+import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 //import com.jsh.erp.service.accountHead.AccountHeadService;
@@ -109,57 +110,11 @@ public class SupplierService {
 
     public List<Supplier> select(String supplier, String type, String phonenum, String telephone, String roleType, int offset, int rows) throws Exception{
         List<Supplier> resList = new ArrayList<Supplier>();
-        //try{
-        //    String [] creatorArray = depotHeadService.getCreatorArray(roleType);
-        //    List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, creatorArray, offset, rows);
-        //    for(Supplier s : list) {
-        //        Integer supplierId = s.getId().intValue();
-        //        String beginTime = Tools.getYearBegin();
-        //        String endTime = Tools.getCenternTime(new Date());
-        //        BigDecimal sum = BigDecimal.ZERO;
-        //        String supplierType = type;
-        //        String inOutType = "";
-        //        String subType = "";
-        //        String typeBack = "";
-        //        String subTypeBack = "";
-        //        String billType = "";
-        //        if (("供应商").equals(supplierType)) {
-        //            inOutType = "入库";
-        //            subType = "采购";
-        //            typeBack = "出库";
-        //            subTypeBack = "采购退货";
-        //            billType = "付款";
-        //        } else if (("客户").equals(supplierType)) {
-        //            inOutType = "出库";
-        //            subType = "销售";
-        //            typeBack = "入库";
-        //            subTypeBack = "销售退货";
-        //            billType = "收款";
-        //        }
-        //        List<DepotHeadVo4StatementAccount> saList = depotHeadService.getStatementAccount(beginTime, endTime, supplierId, null,
-        //                supplierType, inOutType, subType, typeBack, subTypeBack, billType, null, null);
-        //        if(saList.size()>0) {
-        //            DepotHeadVo4StatementAccount item = saList.get(0);
-        //            //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
-        //            BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
-        //            item.setPreNeed(preNeed);
-        //            //实际欠款 = 本期欠款-本期退货的欠款金额
-        //            BigDecimal realDebtMoney = item.getDebtMoney().subtract(item.getReturnDebtMoney());
-        //            item.setDebtMoney(realDebtMoney);
-        //            //期末 = 期初+实际欠款-本期收款
-        //            BigDecimal allNeedGet = preNeed.add(realDebtMoney).subtract(item.getBackMoney());
-        //            sum = sum.add(allNeedGet);
-        //        }
-        //        if(("客户").equals(s.getType())) {
-        //            s.setAllNeedGet(sum);
-        //        } else if(("供应商").equals(s.getType())) {
-        //            s.setAllNeedPay(sum);
-        //        }
-        //        resList.add(s);
-        //    }
-        //}catch(Exception e){
-        //    JshException.readFail(logger, e);
-        //}
+        try{
+            resList = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum,telephone, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
         return resList;
     }
 

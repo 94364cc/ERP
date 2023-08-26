@@ -13,11 +13,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import com.jsh.erp.datasource.entities.Supplier;
+import com.jsh.erp.service.supplier.SupplierComponent;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.ExcelUtils;
 import io.swagger.annotations.Api;
@@ -45,6 +47,9 @@ public class SupplierController {
 
     @Resource
     private SupplierService supplierService;
+
+    @Resource
+    private SupplierComponent supplierComponent;
 
     @Resource
     private UserBusinessService userBusinessService;
@@ -179,6 +184,35 @@ public class SupplierController {
         return arr;
     }
 
+    /**
+     * 获取用户信息
+     * @return 返回插件信息
+     */
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取客户信息")
+    public BaseResponseInfo getPluginInfo(@RequestParam(value = "search",required = false) String search,
+                                          @RequestParam("currentPage") Integer currentPage,
+                                          @RequestParam("pageSize") Integer pageSize,
+                                          HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            Map<String,String> param = new HashMap<>();
+            param.put(Constants.SEARCH,search);
+            param.put("currentPage",""+currentPage);
+            param.put("pageSize",""+pageSize);
+            List resList = supplierComponent.select(param);
+            map.put("rows", resList);
+            map.put("total", resList.size());
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
     /**
      * 查找会员信息-下拉框
      * @param request
