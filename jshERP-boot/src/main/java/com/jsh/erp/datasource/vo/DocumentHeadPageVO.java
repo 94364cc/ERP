@@ -35,8 +35,4 @@ public class DocumentHeadPageVO  {
     @ApiModelProperty(value = "创建人")
     private String creator;
 
-    @ApiModelProperty(value = "详情数量")
-    private Integer detailCount;
-
-
 }

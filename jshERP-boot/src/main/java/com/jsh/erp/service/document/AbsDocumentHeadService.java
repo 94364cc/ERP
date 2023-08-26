@@ -64,7 +64,6 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
             if(ObjectUtil.isNotNull(supplier)){
                 documentHeadPageVO.setSupplierName(supplier.getSupplier());
             }
-            documentHeadPageVO.setDetailCount(documentItemService.countByHeadId(documentHead.getId()));
             pageVOS.add(documentHeadPageVO);
         }
         documentHeadVoPage.setRecords(pageVOS);
