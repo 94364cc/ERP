@@ -1,6 +1,7 @@
 package com.jsh.erp.service.document;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -118,6 +119,7 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
      * 删除
      * @param headId
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteByHeadId(Long headId){
         //查询
@@ -127,13 +129,15 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
         }
         List<Long> documentItemIds = documentItems.stream().map(DocumentItem::getId).collect(Collectors.toList());
         //库存减去
+        List<MaterialCurrentStock> materialCurrentStocks = new ArrayList<>();
         for(DocumentItem documentItem : documentItems){
             MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
             materialCurrentStock.setCurrentNumber(new BigDecimal(documentItem.getOperNumber()));
             materialCurrentStock.setMaterialId(documentItem.getMaterialId());
             materialCurrentStock.setDepotId(documentItem.getDepotId());
-            materialCurrentStockService.delete(materialCurrentStock);
+            materialCurrentStocks.add(materialCurrentStock);
         }
+        materialCurrentStockService.deleteBatch(materialCurrentStocks);
         //删除单据详情
         this.removeByIds(documentItemIds);
     }

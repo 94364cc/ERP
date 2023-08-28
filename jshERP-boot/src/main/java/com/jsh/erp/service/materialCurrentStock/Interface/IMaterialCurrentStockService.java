@@ -30,6 +30,12 @@ public interface IMaterialCurrentStockService extends IService<MaterialCurrentSt
     void delete(MaterialCurrentStock materialCurrentStock);
 
     /**
+     * 新更新单据详情
+     * @param materialCurrentStocks
+     */
+    void deleteBatch(List<MaterialCurrentStock> materialCurrentStocks);
+
+    /**
      * 根据商品详情查询
     ntegeraterialId
      */

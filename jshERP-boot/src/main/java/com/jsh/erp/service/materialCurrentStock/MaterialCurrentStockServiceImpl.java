@@ -1,8 +1,10 @@
 package com.jsh.erp.service.materialCurrentStock;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -57,6 +59,23 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<MaterialCurrent
         this.updateById(query);
     }
 
+    /**
+     * 根据单据id删除全部详情
+     * @param materialCurrentStocks
+     */
+    @Override
+    public void deleteBatch(List<MaterialCurrentStock> materialCurrentStocks) {
+        if(CollUtil.isEmpty(materialCurrentStocks)){
+            return;
+        }
+        List<MaterialCurrentStock> updateList = new ArrayList<>();
+        for(MaterialCurrentStock materialCurrentStock : materialCurrentStocks){
+            MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId());
+            query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
+            updateList.add(query);
+        }
+        this.updateBatchById(updateList);
+    }
 
     /**
      * 新增
