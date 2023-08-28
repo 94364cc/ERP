@@ -26,7 +26,7 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<MaterialCurrent
 
     @Override
     public void add(MaterialCurrentStock materialCurrentStock) {
-        MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId());
+        MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
         if(ObjectUtil.isNull(query)){
             //没有记录就新增
             this.save(materialCurrentStock);
@@ -42,7 +42,7 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<MaterialCurrent
      */
     @Override
     public void update(MaterialCurrentStock materialCurrentStock,Integer operNumber) {
-        MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId());
+        MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
         query.getCurrentNumber().subtract(new BigDecimal(operNumber)).add(materialCurrentStock.getCurrentNumber());
         this.updateById(query);
     }
@@ -54,7 +54,7 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<MaterialCurrent
      */
     @Override
     public void delete(MaterialCurrentStock materialCurrentStock) {
-        MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId());
+        MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
         query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
         this.updateById(query);
     }
@@ -70,7 +70,7 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<MaterialCurrent
         }
         List<MaterialCurrentStock> updateList = new ArrayList<>();
         for(MaterialCurrentStock materialCurrentStock : materialCurrentStocks){
-            MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId());
+            MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
             query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
             updateList.add(query);
         }
@@ -98,9 +98,10 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<MaterialCurrent
      * @return
      */
     @Override
-    public MaterialCurrentStock getByMaterialId(Long depotId, Long materialId) {
+    public MaterialCurrentStock getByMaterialId(Long depotId, Long materialId,Long supplierId) {
          MaterialCurrentStock materialCurrentStock = this.getOne(Wrappers.lambdaQuery(MaterialCurrentStock.class)
              .eq(MaterialCurrentStock::getMaterialId,materialId)
+             .eq(MaterialCurrentStock::getSupplierId,supplierId)
              .eq(MaterialCurrentStock::getDepotId,depotId)
          );
          return materialCurrentStock;

@@ -39,5 +39,5 @@ public interface IMaterialCurrentStockService extends IService<MaterialCurrentSt
      * 根据商品详情查询
     ntegeraterialId
      */
-    MaterialCurrentStock getByMaterialId(Long depotId, Long materialId);
+    MaterialCurrentStock getByMaterialId(Long depotId, Long materialId,Long supplierId);
 }

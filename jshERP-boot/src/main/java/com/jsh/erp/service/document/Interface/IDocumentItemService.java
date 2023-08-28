@@ -3,6 +3,8 @@ package com.jsh.erp.service.document.Interface;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jsh.erp.datasource.dto.DocumentItemAddDto;
+import com.jsh.erp.datasource.dto.DocumentItemUpdateDto;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
@@ -11,15 +13,15 @@ public interface IDocumentItemService extends IService<DocumentItem> {
 
     /**
      * 新增单据详情
-     * @param documentItem
+     * @param documentItemAddDto
      */
-    void add(DocumentItem documentItem);
+    void add(DocumentItemAddDto documentItemAddDto);
 
     /**
      * 新更新单据详情
-     * @param documentItem
+     * @param documentItemUpdateDto
      */
-    void update(DocumentItem documentItem);
+    void update(DocumentItemUpdateDto documentItemUpdateDto);
 
     /**
      * 新更新单据详情

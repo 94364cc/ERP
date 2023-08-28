@@ -54,4 +54,11 @@ public interface IDocumentHeadService extends IService<DocumentHead> {
      */
     DocumentPrintVO print(Long id);
 
+
+    /**
+     * 根据单据详情查询客户
+     * @return
+     */
+    Long getSupplierIdByItemId(Long itemId);
+
 }

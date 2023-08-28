@@ -1,5 +1,7 @@
 package com.jsh.erp.controller;
 
+import com.jsh.erp.datasource.dto.DocumentItemAddDto;
+import com.jsh.erp.datasource.dto.DocumentItemUpdateDto;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.page.DocumentHeadPage;
@@ -35,27 +37,27 @@ public class DocumentItemController {
 
     /**
      * 新增制单详情
-     * @param documentItem
+     * @param documentItemAddDto
      * @return
      * @throws Exception
      */
     @PostMapping(value = "/add")
     @ApiOperation(value = "新增制单详情")
-    public BaseResponseInfo insert(@RequestBody DocumentItem documentItem) throws Exception{
-        documentItemService.add(documentItem);
+    public BaseResponseInfo insert(@RequestBody DocumentItemAddDto documentItemAddDto) throws Exception{
+        documentItemService.add(documentItemAddDto);
         return BaseResponseInfo.success();
     }
 
     /**
      * 修改制单详情
-     * @param documentItem
+     * @param documentItemUpdateDto
      * @return
      * @throws Exception
      */
     @PostMapping(value = "/update")
     @ApiOperation(value = "修改制单详情")
-    public BaseResponseInfo update(@RequestBody DocumentItem documentItem) throws Exception{
-        documentItemService.update(documentItem);
+    public BaseResponseInfo update(@RequestBody DocumentItemUpdateDto documentItemUpdateDto) throws Exception{
+        documentItemService.update(documentItemUpdateDto);
         return BaseResponseInfo.success();
     }
 

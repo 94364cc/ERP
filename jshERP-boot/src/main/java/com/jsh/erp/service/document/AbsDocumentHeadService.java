@@ -7,8 +7,8 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.enumPackage.DocumentTypeEnum;
-import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.enumPackage.PackageTypeEnum;
@@ -16,6 +16,7 @@ import com.jsh.erp.datasource.mappers.DocumentHeadMapper;
 import com.jsh.erp.datasource.page.DocumentHeadPage;
 import com.jsh.erp.datasource.vo.DocumentHeadPageVO;
 import com.jsh.erp.datasource.vo.DocumentHeadVO;
+import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.document.Interface.IDocumentHeadService;
 import com.jsh.erp.service.document.Interface.IDocumentItemService;
@@ -97,5 +98,17 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
         return documentHeadVO;
     }
 
-
+    /**
+     * 根据单据详情查询客户
+     * @param itemId
+     * @return
+     */
+    @Override
+    public Long getSupplierIdByItemId(Long itemId) {
+        DocumentItem documentItem = documentItemService.getById(itemId);
+        ResultEnum.DOCUMENT_ITEM_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentItem));
+        DocumentHead documentHead = this.getById(documentItem.getHeadId());
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
+        return documentHead.getSupplierId();
+    }
 }
