@@ -9,16 +9,14 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
-import com.jsh.erp.datasource.mappers.MaterialCurrentStockMapper;
-import com.jsh.erp.service.document.Interface.IDocumentItemService;
+import com.jsh.erp.datasource.mappers.NMaterialCurrentStockMapper;
 import com.jsh.erp.service.material.Interface.INMaterialService;
-import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.materialCurrentStock.Interface.IMaterialCurrentStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MaterialCurrentStockServiceImpl extends ServiceImpl<MaterialCurrentStockMapper, MaterialCurrentStock> implements
+public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurrentStockMapper, MaterialCurrentStock> implements
     IMaterialCurrentStockService {
 
     @Autowired
