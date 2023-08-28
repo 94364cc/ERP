@@ -111,4 +111,9 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
         ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
         return documentHead.getSupplierId();
     }
+
+    @Override
+    public DocumentHead getByNumber(String number) {
+        return this.getOne(Wrappers.lambdaQuery(DocumentHead.class).eq(DocumentHead::getNumber,number),false);
+    }
 }

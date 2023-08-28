@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -62,6 +63,10 @@ public class DocumentItem {
     @ApiModelProperty(value = "批号")
     @TableField(value = "batch_number")
     private String batchNumber;
+
+    @ApiModelProperty(value = "创建时间")
+    @TableField(value = "create_time")
+    private LocalDate createTime = LocalDate.now();
 
     @ApiModelProperty(value = "租户id")
     @TableField(value = "tenant_id")

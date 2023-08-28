@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.vo;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,9 +39,9 @@ public class DocumentPrintVO {
     private List<DocumentItemPrintVO> documentItemPrintVOList;
 
     @ApiModelProperty(value = "数量汇总")
-    private String countNumber;
+    private Integer numberCount;
 
     @ApiModelProperty(value = "立方数汇总")
-    private String volumeNumber;
+    private BigDecimal volumeCount;
 
 }

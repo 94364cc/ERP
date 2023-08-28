@@ -2,12 +2,16 @@ package com.jsh.erp.service.document.Interface;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsh.erp.datasource.dto.DocumentItemAddDto;
 import com.jsh.erp.datasource.dto.DocumentItemUpdateDto;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
+import com.jsh.erp.datasource.entities.DocumentItemFlow;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
+import com.jsh.erp.utils.Constants;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface IDocumentItemService extends IService<DocumentItem> {
 
@@ -49,5 +53,16 @@ public interface IDocumentItemService extends IService<DocumentItem> {
      */
     List<DocumentItemPrintVO> printByHeadId(Long headId);
 
+
+    /**
+     * 根据商品id获取流水
+     * @param materialId
+     */
+    Page<DocumentItemFlow> getFlowByMaterialId(Integer pageSize,
+                                               Integer currentPage,
+                                               String number,
+                                               String beginTime,
+                                               String endTime,
+                                               Long materialId);
 
 }

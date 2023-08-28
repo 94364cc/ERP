@@ -13,11 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotItem;
 import com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId;
 import com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx;
+import com.jsh.erp.datasource.entities.DocumentItem;
+import com.jsh.erp.datasource.entities.DocumentItemFlow;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.entities.Unit;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
@@ -26,6 +29,9 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.depotItem.DepotItemService;
+import com.jsh.erp.service.document.Interface.IDocumentHeadService;
+import com.jsh.erp.service.document.Interface.IDocumentItemService;
+import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -43,6 +49,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +77,9 @@ public class DepotItemController {
     @Resource
     private MaterialService materialService;
 
+    @Autowired
+    private IDocumentItemService documentItemService;
+
     @Resource
     private UnitService unitService;
 
@@ -87,62 +97,20 @@ public class DepotItemController {
 
     /**
      * 根据仓库和商品查询单据列表
-     * @param mId
-     * @param request
      * @return
      */
     @GetMapping(value = "/findDetailByDepotIdsAndMaterialId")
     @ApiOperation(value = "根据仓库和商品查询单据列表")
-    public String findDetailByDepotIdsAndMaterialId(
+    public BaseResponseInfo findDetailByDepotIdsAndMaterialId(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-            @RequestParam(value = "depotIds",required = false) String depotIds,
-            @RequestParam(value = "sku",required = false) String sku,
-            @RequestParam(value = "batchNumber",required = false) String batchNumber,
             @RequestParam(value = "number",required = false) String number,
             @RequestParam(value = "beginTime",required = false) String beginTime,
             @RequestParam(value = "endTime",required = false) String endTime,
-            @RequestParam("materialId") Long mId,
-            HttpServletRequest request)throws Exception {
-        Map<String, Object> objectMap = new HashMap<>();
-        if(StringUtil.isNotEmpty(beginTime)) {
-            beginTime = beginTime + BusinessConstants.DAY_FIRST_TIME;
-        }
-        if(StringUtil.isNotEmpty(endTime)) {
-            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
-        }
-        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, forceFlag, sku,
-                batchNumber, StringUtil.toNull(number), beginTime, endTime, mId, (currentPage-1)*pageSize, pageSize);
-        JSONArray dataArray = new JSONArray();
-        if (list != null) {
-            for (DepotItemVo4DetailByTypeAndMId d: list) {
-                JSONObject item = new JSONObject();
-                item.put("number", d.getNumber()); //编号
-                item.put("barCode", d.getBarCode()); //条码
-                item.put("materialName", d.getMaterialName()); //名称
-                String type = d.getType();
-                String subType = d.getSubType();
-                if(("其它").equals(type)) {
-                    item.put("type", subType); //进出类型
-                } else {
-                    item.put("type", subType + type); //进出类型
-                }
-                item.put("depotName", d.getDepotName()); //仓库名称
-                item.put("basicNumber", d.getBnum()); //数量
-                item.put("operTime", Tools.getCenternTime(d.getOtime())); //时间
-                dataArray.add(item);
-            }
-        }
-        if (list == null) {
-            objectMap.put("rows", new ArrayList<Object>());
-            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
-            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
-        }
-        objectMap.put("rows", dataArray);
-        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, forceFlag, sku,
-                batchNumber, StringUtil.toNull(number), beginTime, endTime, mId));
-        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+            @RequestParam("materialId") Long materialId)throws Exception {
+
+        Page<DocumentItemFlow> page = documentItemService.getFlowByMaterialId(pageSize,currentPage,number,beginTime,endTime,materialId);
+        return BaseResponseInfo.data(page);
     }
 
     /**

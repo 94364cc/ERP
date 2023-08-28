@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.print.Doc;
+
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.dto.DocumentItemAddDto;
@@ -18,8 +21,10 @@ import com.jsh.erp.datasource.dto.DocumentItemUpdateDto;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
+import com.jsh.erp.datasource.entities.DocumentItemFlow;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
+import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.mappers.DocumentItemMapper;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 import com.jsh.erp.exception.ResultEnum;
@@ -234,6 +239,68 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
             documentItemPrintVOList.add(documentItemPrintVO);
         }
         return documentItemPrintVOList;
+    }
+
+    /**
+     * 根据商品id获取流水
+     * @param materialId
+     * @return
+     */
+    @Override
+    public Page<DocumentItemFlow> getFlowByMaterialId(Integer pageSize,
+                                                      Integer currentPage,
+                                                      String number,
+                                                      String beginTime,
+                                                      String endTime,
+                                                      Long materialId) {
+
+        Page<DocumentItemFlow> resultPage = new Page<>(currentPage,pageSize);
+        //根据单据号查询单据主体
+        List<Long> documentHeadIds = CollUtil.newArrayList();
+        if(StrUtil.isNotBlank(number)){
+            List<DocumentHead> documentHeads = documentHeadService.list(Wrappers.lambdaQuery(DocumentHead.class).like(DocumentHead::getNumber,number));
+            documentHeadIds = documentHeads.stream().map(DocumentHead::getId).collect(Collectors.toList());
+        }
+
+        Page page = new Page(currentPage,pageSize);
+        Page<DocumentItem> documentItemPage = this.page(page,Wrappers.lambdaQuery(DocumentItem.class)
+            .eq(DocumentItem::getMaterialId,materialId)
+            .in(CollUtil.isNotEmpty(documentHeadIds),DocumentItem::getHeadId,documentHeadIds)
+            .ge(StrUtil.isNotBlank(beginTime),DocumentItem::getCreateTime,beginTime)
+            .le(StrUtil.isNotBlank(endTime),DocumentItem::getCreateTime,endTime)
+        );
+        List<DocumentItemFlow> documentItemFlows = new ArrayList<>();
+        List<DocumentItem> documentItems = documentItemPage.getRecords();
+        //获取商品全量信息
+        List<Long> materialLIdist = documentItems.stream().map(DocumentItem::getMaterialId).collect(Collectors.toList());
+        Map<Long,Material> materialMap = materialService.getEntityMayByIds(materialLIdist);
+
+        for(DocumentItem documentItem: documentItemPage.getRecords()){
+            DocumentItemFlow documentItemFlow = new DocumentItemFlow();
+            //填充编号和类型
+            DocumentHead documentHead = documentHeadService.getById(documentItem.getHeadId());
+            if(ObjectUtil.isNotNull(documentHead)){
+                documentItemFlow.setType(documentHead.getType());
+                documentItemFlow.setNumber(documentHead.getNumber());
+            }
+
+            //填充仓库名称
+            Depot depot = depotService.getDepot(documentItem.getDepotId());
+            if(ObjectUtil.isNotNull(depot)){
+                documentItemFlow.setDepotName(depot.getName());
+            }
+
+            //填充商品信息
+            Material material = materialMap.get(documentItem.getMaterialId());
+            if(ObjectUtil.isNotNull(material)){
+                documentItemFlow.setName(material.getName());
+                documentItemFlow.setModel(material.getModel());
+            }
+            documentItemFlow.setOperNumber(documentItem.getOperNumber());
+            documentItemFlows.add(documentItemFlow);
+        }
+        resultPage.setRecords(documentItemFlows);
+        return resultPage;
     }
 
 }
