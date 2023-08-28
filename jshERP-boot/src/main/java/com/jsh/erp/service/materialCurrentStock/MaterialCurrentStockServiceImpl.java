@@ -9,6 +9,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
+import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.mappers.NMaterialCurrentStockMapper;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.materialCurrentStock.Interface.IMaterialCurrentStockService;
@@ -103,5 +104,18 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
              .eq(MaterialCurrentStock::getDepotId,depotId)
          );
          return materialCurrentStock;
+    }
+
+    /**
+     * 根据用户id，仓库id，商品id获取信息
+     * @return
+     */
+    @Override
+    public List<MaterialCurrentStock> getByExample(MaterialCurrentStockQuery query) {
+        return this.list(Wrappers.<MaterialCurrentStock>lambdaQuery()
+            .eq(ObjectUtil.isNotNull(query.getSupplierId()),MaterialCurrentStock::getSupplierId,query.getSupplierId())
+            .eq(ObjectUtil.isNotNull(query.getMaterialId()),MaterialCurrentStock::getMaterialId,query.getMaterialId())
+            .eq(ObjectUtil.isNotNull(query.getDepotId()),MaterialCurrentStock::getDepotId,query.getDepotId())
+        );
     }
 }

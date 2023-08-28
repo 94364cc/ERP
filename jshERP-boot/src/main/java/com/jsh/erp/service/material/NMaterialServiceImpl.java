@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -16,15 +17,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Material;
+import com.jsh.erp.datasource.entities.MaterialCurrentStock;
+import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.NMaterialMapper;
 import com.jsh.erp.datasource.mappers.UnitMapper;
 import com.jsh.erp.datasource.page.MaterialPage;
+import com.jsh.erp.datasource.page.MaterialWithStockPage;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.materialCategory.Interface.IMaterialCategoryService;
+import com.jsh.erp.service.materialCurrentStock.Interface.IMaterialCurrentStockService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.StringUtil;
 import org.apache.tomcat.util.buf.StringUtils;
@@ -44,6 +49,9 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
 
     @Autowired
     IMaterialCategoryService materialCategoryService;
+
+    @Autowired
+    IMaterialCurrentStockService materialCurrentStockService;
 
     @Autowired
     UnitService unitService;
@@ -78,6 +86,34 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
         return true;
     }
 
+    /**
+     * 获取仓库下的商品
+     * @param materialWithStockPage
+     * @return
+     */
+    @Override
+    public Page<Material> getPageWithStock(MaterialWithStockPage materialWithStockPage) {
+        Page<Material> resultPage = new Page<>(materialWithStockPage.getCurrent(),materialWithStockPage.getSize());
+        //查询仓库下的商品
+        MaterialCurrentStockQuery materialCurrentStockQuery = new MaterialCurrentStockQuery();
+        BeanUtil.copyProperties(materialWithStockPage,materialCurrentStockQuery);
+        List<MaterialCurrentStock> materialCurrentStocks = materialCurrentStockService.getByExample(materialCurrentStockQuery);
+        if(CollUtil.isEmpty(materialCurrentStocks)){
+            return resultPage;
+        }
+
+        //查询商品
+        List<Long> materialIds = materialCurrentStocks.stream().map(MaterialCurrentStock::getId).distinct().collect(Collectors.toList());
+        resultPage = this.page(materialWithStockPage,Wrappers.<Material>lambdaQuery()
+            .eq(Material::getId,materialIds)
+            .and(StrUtil.isNotBlank(materialWithStockPage.getQueryParam()),
+                wp->wp.eq(Material::getModel,materialWithStockPage.getQueryParam())
+                    .or().eq(Material::getName,materialWithStockPage.getQueryParam())
+            )
+        );
+
+        return resultPage;
+    }
 
     /**
      * 删除商品

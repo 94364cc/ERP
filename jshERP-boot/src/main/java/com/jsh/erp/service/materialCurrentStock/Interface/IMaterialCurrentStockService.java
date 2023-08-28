@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
+import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 import io.swagger.models.auth.In;
 
@@ -40,4 +41,10 @@ public interface IMaterialCurrentStockService extends IService<MaterialCurrentSt
     ntegeraterialId
      */
     MaterialCurrentStock getByMaterialId(Long depotId, Long materialId,Long supplierId);
+
+    /**
+     * 根据商品详情查询
+     ntegeraterialId
+     */
+    List<MaterialCurrentStock> getByExample(MaterialCurrentStockQuery query);
 }

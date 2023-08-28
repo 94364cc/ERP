@@ -26,6 +26,12 @@ public class DocumentHeadPageVO  {
     @ApiModelProperty(value = "订单编号")
     private String number;
 
+    @ApiModelProperty(value = "车牌号")
+    private String carNumber;
+
+    @ApiModelProperty(value = "备注")
+    private String remark;
+
     @ApiModelProperty(value = "入库单，包类型 1-全托 2-半托")
     private Integer packageType;
 

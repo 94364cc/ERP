@@ -48,7 +48,7 @@ public class Material {
     @TableField(value = "unit_id")
     private Long unitId;
 
-    @ApiModelProperty(value = "单位id")
+    @ApiModelProperty(value = "单位名称")
     @TableField(exist = false)
     private String unitName;
 

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.page.MaterialPage;
+import com.jsh.erp.datasource.page.MaterialWithStockPage;
 
 public interface INMaterialService extends IService<Material> {
 
@@ -22,6 +23,13 @@ public interface INMaterialService extends IService<Material> {
      * @return
      */
     Boolean updateMaterial(Material material);
+
+    /**
+     * 更新商品
+     * @param materialWithStockPage
+     * @return
+     */
+    Page<Material> getPageWithStock(MaterialWithStockPage materialWithStockPage);
     /**
      * 删除商品
      * @param id

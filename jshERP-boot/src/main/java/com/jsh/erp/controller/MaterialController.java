@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.page.MaterialPage;
+import com.jsh.erp.datasource.page.MaterialWithStockPage;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -59,6 +60,19 @@ public class MaterialController {
     @ApiOperation(value = "更新商品")
     public BaseResponseInfo update(@RequestBody Material material) throws Exception{
         nMaterialService.updateMaterial(material);
+        return BaseResponseInfo.success();
+    }
+
+
+    /**
+     * 查询库存中的商品
+     * @param materialWithStockPage
+     * @return
+     */
+    @GetMapping(value = "/getListWithStock")
+    @ApiOperation(value = "获取仓库下的商品")
+    public BaseResponseInfo getListWithStock(MaterialWithStockPage materialWithStockPage) throws Exception{
+        nMaterialService.getPageWithStock(materialWithStockPage);
         return BaseResponseInfo.success();
     }
 
