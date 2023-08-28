@@ -1,5 +1,6 @@
 package com.jsh.erp.service.document;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -132,6 +133,8 @@ public class InDocumentHeadService extends AbsDocumentHeadService implements Ini
         //根据单据id查询详情
         List<DocumentItemPrintVO> documentItemPrintVOList =documentItemService.printByHeadId(id);
         //汇总计算数量和立方数
+        Integer operNumberCount = documentItemPrintVOList.stream().reduce(0,(total,documentItemPrintVO)-> total+documentItemPrintVO.getOperNumber(),Integer::sum);
+        BigDecimal volumeCount = documentItemPrintVOList.stream().reduce(new BigDecimal(0),(total,documentItemPrintVO)-> total.add(documentItemPrintVO.getVolume()),BigDecimal::add);
         return null;
     }
 }

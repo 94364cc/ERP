@@ -14,7 +14,7 @@ public class DocumentItemPrintVO {
     private String model;
 
     @ApiModelProperty(value = "商品箱子数量")
-    private BigDecimal operNumber;
+    private Integer operNumber;
 
     @ApiModelProperty(value = "单位体积，长*宽*高")
     private String standard;

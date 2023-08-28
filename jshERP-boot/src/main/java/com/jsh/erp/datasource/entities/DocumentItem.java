@@ -33,7 +33,7 @@ public class DocumentItem {
 
     @ApiModelProperty(value = "数量")
     @TableField(value = "oper_number")
-    private BigDecimal operNumber;
+    private Integer operNumber;
 
     @ApiModelProperty(value = "箱规 长*宽*高")
     @TableField(value = "box_size")

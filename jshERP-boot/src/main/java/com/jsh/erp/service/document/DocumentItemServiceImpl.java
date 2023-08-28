@@ -14,12 +14,14 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.entities.Material;
+import com.jsh.erp.datasource.entities.MaterialCurrentStock;
 import com.jsh.erp.datasource.mappers.DocumentItemMapper;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.document.Interface.IDocumentItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.Interface.INMaterialService;
+import com.jsh.erp.service.materialCurrentStock.Interface.IMaterialCurrentStockService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
     @Autowired
     INMaterialService materialService;
     @Autowired
+    IMaterialCurrentStockService materialCurrentStockService;
+    @Autowired
     DepotService depotService;
     @Autowired
     LogService logService;
@@ -46,6 +50,12 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
     @Override
     public void add(DocumentItem documentItem){
         this.save(documentItem);
+        //更新仓库货物
+        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+        materialCurrentStock.setCurrentNumber(new BigDecimal(documentItem.getOperNumber()));
+        materialCurrentStock.setMaterialId(documentItem.getMaterialId());
+        materialCurrentStock.setDepotId(documentItem.getDepotId());
+        materialCurrentStockService.add(materialCurrentStock);
 
         //记录日志
         StringBuffer sb = new StringBuffer();
@@ -61,7 +71,17 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(DocumentItem documentItem){
+        DocumentItem old = this.getById(documentItem.getId());
+        //如果修改了数量，更新仓库货物
+        if(old.getOperNumber()!=documentItem.getOperNumber()){
+            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+            materialCurrentStock.setCurrentNumber(new BigDecimal(documentItem.getOperNumber()));
+            materialCurrentStock.setMaterialId(documentItem.getMaterialId());
+            materialCurrentStock.setDepotId(documentItem.getDepotId());
+            materialCurrentStockService.update(materialCurrentStock,old.getOperNumber());
+        }
         this.update(documentItem);
+
 
         //记录日志
         StringBuffer sb = new StringBuffer();
@@ -76,7 +96,16 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Long id){
+        DocumentItem documentItem = this.getById(id);
+        //库存减去
+        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+        materialCurrentStock.setCurrentNumber(new BigDecimal(documentItem.getOperNumber()));
+        materialCurrentStock.setMaterialId(documentItem.getMaterialId());
+        materialCurrentStock.setDepotId(documentItem.getDepotId());
+        materialCurrentStockService.delete(materialCurrentStock);
+        //删除单据详情
         this.removeById(id);
+
 
         //记录日志
         StringBuffer sb = new StringBuffer();
@@ -91,7 +120,22 @@ public class DocumentItemServiceImpl extends ServiceImpl<DocumentItemMapper, Doc
      */
     @Override
     public void deleteByHeadId(Long headId){
-        this.remove(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
+        //查询
+        List<DocumentItem> documentItems = this.list(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
+        if(CollUtil.isEmpty(documentItems)){
+            return ;
+        }
+        List<Long> documentItemIds = documentItems.stream().map(DocumentItem::getId).collect(Collectors.toList());
+        //库存减去
+        for(DocumentItem documentItem : documentItems){
+            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+            materialCurrentStock.setCurrentNumber(new BigDecimal(documentItem.getOperNumber()));
+            materialCurrentStock.setMaterialId(documentItem.getMaterialId());
+            materialCurrentStock.setDepotId(documentItem.getDepotId());
+            materialCurrentStockService.delete(materialCurrentStock);
+        }
+        //删除单据详情
+        this.removeByIds(documentItemIds);
     }
 
     /**
