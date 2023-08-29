@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.datasource.page.MaterialWithStockPage;
@@ -111,6 +113,19 @@ public class MaterialController {
     @ApiOperation(value = "查看商品分页")
     public BaseResponseInfo getPage(MaterialPage materialPage){
         return BaseResponseInfo.data(nMaterialService.getPage(materialPage));
+    }
+
+
+    /**
+     * 根据款号筛选
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/model")
+    @ApiOperation(value = "查看商品")
+    public BaseResponseInfo getPage(String model){
+        return BaseResponseInfo.data(nMaterialService.list(Wrappers.lambdaQuery(Material.class)
+            .like(StrUtil.isNotBlank(model),Material::getModel,model)));
     }
 
 }
