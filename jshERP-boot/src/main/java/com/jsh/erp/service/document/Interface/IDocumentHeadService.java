@@ -1,5 +1,6 @@
 package com.jsh.erp.service.document.Interface;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -67,4 +68,11 @@ public interface IDocumentHeadService extends IService<DocumentHead> {
      */
     DocumentHead getByNumber(String number);
 
+    /**
+     * 生成单据号
+     * @param supplierId
+     * @param date
+     * @return
+     */
+    String generatNumber(Long supplierId, LocalDate date);
 }

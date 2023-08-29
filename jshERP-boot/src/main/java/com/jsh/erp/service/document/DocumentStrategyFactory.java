@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import com.jsh.erp.datasource.enumPackage.DocumentTypeEnum;
+import com.jsh.erp.service.document.Interface.IDocumentHeadService;
 
 /**
  * @describe 单子注册工厂
@@ -14,19 +15,19 @@ import com.jsh.erp.datasource.enumPackage.DocumentTypeEnum;
  **/
 public class DocumentStrategyFactory {
 
-    private static final Map<Integer, InDocumentHeadService> strategyMap = new ConcurrentHashMap<>();
+    private static final Map<Integer, IDocumentHeadService> strategyMap = new ConcurrentHashMap<>();
 
-    public static InDocumentHeadService getByType(Integer type) {
-        InDocumentHeadService inDocumentHeadService = strategyMap.get(type);
-        if(ObjectUtil.isNull(inDocumentHeadService)){
-            inDocumentHeadService= strategyMap.get(DocumentTypeEnum.IN);
+    public static IDocumentHeadService getByType(Integer type) {
+        IDocumentHeadService documentHeadService = strategyMap.get(type);
+        if(ObjectUtil.isNull(documentHeadService)){
+            documentHeadService= strategyMap.get(DocumentTypeEnum.IN);
         }
-        return inDocumentHeadService;
+        return documentHeadService;
     }
 
-    public static  void register(Integer type,InDocumentHeadService inDocumentHeadService) {
+    public static  void register(Integer type, IDocumentHeadService documentHeadService) {
         Assert.notNull(type,"type can't be null");
-        strategyMap.put(type,inDocumentHeadService);
+        strategyMap.put(type,documentHeadService);
     }
 
 }
