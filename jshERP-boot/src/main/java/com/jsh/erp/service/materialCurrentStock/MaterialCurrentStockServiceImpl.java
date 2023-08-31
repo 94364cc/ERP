@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
 import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.mappers.NMaterialCurrentStockMapper;
+import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.materialCurrentStock.Interface.IMaterialCurrentStockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,25 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
      * @param materialCurrentStock
      */
     @Override
-    public void update(MaterialCurrentStock materialCurrentStock,Integer operNumber) {
+    public void inUpdate(MaterialCurrentStock materialCurrentStock,Integer operNumber) {
         MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
+        ResultEnum.MATERIAL_STOCK_NOT_EXISTS.notNull(query);
         query.getCurrentNumber().subtract(new BigDecimal(operNumber)).add(materialCurrentStock.getCurrentNumber());
         this.updateById(query);
     }
 
+    /**
+     * 出库单据更新
+     * @param materialCurrentStock
+     * @param oldOperNumber
+     */
+    @Override
+    public void outUpdate(MaterialCurrentStock materialCurrentStock, Integer oldOperNumber) {
+        MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
+        ResultEnum.MATERIAL_STOCK_NOT_EXISTS.notNull(query);
+        query.getCurrentNumber().add(new BigDecimal(oldOperNumber)).subtract(materialCurrentStock.getCurrentNumber());
+        this.updateById(query);
+    }
 
     /**
      * 减去原来的数量
@@ -55,6 +69,7 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
     @Override
     public void delete(MaterialCurrentStock materialCurrentStock) {
         MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
+        ResultEnum.MATERIAL_STOCK_NOT_EXISTS.notNull(query);
         query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
         this.updateById(query);
     }
@@ -72,6 +87,24 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
         for(MaterialCurrentStock materialCurrentStock : materialCurrentStocks){
             MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
             query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
+            updateList.add(query);
+        }
+        this.updateBatchById(updateList);
+    }
+
+    /**
+     * 新根据主体id加上单据详情（出库单场景）
+     * @param materialCurrentStocks
+     */
+    @Override
+    public void addBatch(List<MaterialCurrentStock> materialCurrentStocks) {
+        if(CollUtil.isEmpty(materialCurrentStocks)){
+            return;
+        }
+        List<MaterialCurrentStock> updateList = new ArrayList<>();
+        for(MaterialCurrentStock materialCurrentStock : materialCurrentStocks){
+            MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
+            query.getCurrentNumber().add(materialCurrentStock.getCurrentNumber());
             updateList.add(query);
         }
         this.updateBatchById(updateList);

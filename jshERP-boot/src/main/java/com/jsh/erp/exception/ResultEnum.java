@@ -29,6 +29,7 @@ public enum ResultEnum implements ResultExceptionAssert {
     DOCUMENT_DOCUMENT_ERROR(2003,"请填写仓库编号"),
     DOCUMENT_ITEM_NOT_EXISTS(2004,"单据详情不存在"),
     DOCUMENT_HEAD_NOT_EXISTS(2005,"单据主体不存在"),
+    MATERIAL_STOCK_NOT_EXISTS(3001,"仓库下货物不存在"),
 
 
 

@@ -28,7 +28,7 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
     private final static String LOG_NAME = "出库单详情";
     @Override
     public void afterPropertiesSet() throws Exception {
-        DocumentItemStrategyFactory.register(DocumentTypeEnum.IN.getType(),this);
+        DocumentItemStrategyFactory.register(DocumentTypeEnum.OUT.getType(),this);
     }
 
     /**
@@ -40,17 +40,20 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
     public void add(DocumentItemAddDto documentItemAddDto){
         DocumentItem documentItem = new DocumentItem();
         BeanUtil.copyProperties(documentItemAddDto,documentItem);
+
         this.save(documentItem);
 
         //获取客户
         DocumentHead documentHead =documentHeadService.getById(documentItemAddDto.getHeadId());
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
+
         //更新仓库货物
         MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
         materialCurrentStock.setCurrentNumber(new BigDecimal(documentItem.getOperNumber()));
         materialCurrentStock.setMaterialId(documentItem.getMaterialId());
         materialCurrentStock.setDepotId(documentItem.getDepotId());
         materialCurrentStock.setSupplierId(documentHead.getSupplierId());
-        materialCurrentStockService.add(materialCurrentStock);
+        materialCurrentStockService.delete(materialCurrentStock);
 
         //记录日志
         StringBuffer sb = new StringBuffer();
@@ -77,7 +80,7 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
             materialCurrentStock.setMaterialId(documentItem.getMaterialId());
             materialCurrentStock.setDepotId(documentItem.getDepotId());
             materialCurrentStock.setSupplierId(documentHead.getSupplierId());
-            materialCurrentStockService.update(materialCurrentStock,old.getOperNumber());
+            materialCurrentStockService.outUpdate(materialCurrentStock,old.getOperNumber());
         }
         this.updateById(documentItem);
 
@@ -105,7 +108,7 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
         materialCurrentStock.setMaterialId(documentItem.getMaterialId());
         materialCurrentStock.setDepotId(documentItem.getDepotId());
         materialCurrentStock.setSupplierId(supplierId);
-        materialCurrentStockService.delete(materialCurrentStock);
+        materialCurrentStockService.add(materialCurrentStock);
         //删除单据详情
         this.removeById(id);
 
@@ -134,7 +137,7 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
             return ;
         }
         List<Long> documentItemIds = documentItems.stream().map(DocumentItem::getId).collect(Collectors.toList());
-        //库存减去
+        //库存加上
         List<MaterialCurrentStock> materialCurrentStocks = new ArrayList<>();
         for(DocumentItem documentItem : documentItems){
             MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
@@ -144,7 +147,7 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
             materialCurrentStock.setSupplierId(documentHead.getSupplierId());
             materialCurrentStocks.add(materialCurrentStock);
         }
-        materialCurrentStockService.deleteBatch(materialCurrentStocks);
+        materialCurrentStockService.addBatch(materialCurrentStocks);
         //删除单据详情
         this.removeByIds(documentItemIds);
     }

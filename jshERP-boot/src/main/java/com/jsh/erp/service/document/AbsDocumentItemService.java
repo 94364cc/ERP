@@ -119,9 +119,11 @@ public abstract class AbsDocumentItemService extends ServiceImpl<DocumentItemMap
             documentItemPrintVO.setRemark(documentItem.getRemark());
             //获取箱规和款号
             Material material = materialMap.get(documentItem.getMaterialId());
-            documentItemPrintVO.setModel(material.getModel());
-            BigDecimal volumn = StringUtil.standard2Volume(material.getStandard());
-            documentItemPrintVO.setVolume(volumn);
+            if(ObjectUtil.isNotNull(material)){
+                documentItemPrintVO.setModel(material.getModel());
+                BigDecimal volumn = StringUtil.standard2Volume(material.getStandard());
+                documentItemPrintVO.setVolume(volumn);
+            }
             documentItemPrintVOList.add(documentItemPrintVO);
         }
         return documentItemPrintVOList;

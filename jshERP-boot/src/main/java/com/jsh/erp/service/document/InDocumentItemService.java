@@ -91,7 +91,7 @@ public class InDocumentItemService extends AbsDocumentItemService implements Ini
             materialCurrentStock.setMaterialId(documentItem.getMaterialId());
             materialCurrentStock.setDepotId(documentItem.getDepotId());
             materialCurrentStock.setSupplierId(documentHead.getSupplierId());
-            materialCurrentStockService.update(materialCurrentStock,old.getOperNumber());
+            materialCurrentStockService.inUpdate(materialCurrentStock,old.getOperNumber());
         }
         this.updateById(documentItem);
 
@@ -119,7 +119,7 @@ public class InDocumentItemService extends AbsDocumentItemService implements Ini
         materialCurrentStock.setMaterialId(documentItem.getMaterialId());
         materialCurrentStock.setDepotId(documentItem.getDepotId());
         materialCurrentStock.setSupplierId(supplierId);
-        materialCurrentStockService.delete(materialCurrentStock);
+        materialCurrentStockService.add(materialCurrentStock);
         //删除单据详情
         this.removeById(id);
 

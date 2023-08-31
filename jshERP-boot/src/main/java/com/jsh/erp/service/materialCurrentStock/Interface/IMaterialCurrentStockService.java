@@ -18,11 +18,19 @@ public interface IMaterialCurrentStockService extends IService<MaterialCurrentSt
     void add(MaterialCurrentStock materialCurrentStock);
 
     /**
+     * 新入库更新单据详情
+     * @param materialCurrentStock
+     * @param oldOperNumber
+     */
+    void inUpdate(MaterialCurrentStock materialCurrentStock,Integer oldOperNumber);
+
+
+    /**
      * 新更新单据详情
      * @param materialCurrentStock
      * @param oldOperNumber
      */
-    void update(MaterialCurrentStock materialCurrentStock,Integer oldOperNumber);
+    void outUpdate(MaterialCurrentStock materialCurrentStock,Integer oldOperNumber);
 
     /**
      * 新更新单据详情
@@ -31,10 +39,16 @@ public interface IMaterialCurrentStockService extends IService<MaterialCurrentSt
     void delete(MaterialCurrentStock materialCurrentStock);
 
     /**
-     * 新更新单据详情
+     * 新根据主体id删除单据详情
      * @param materialCurrentStocks
      */
     void deleteBatch(List<MaterialCurrentStock> materialCurrentStocks);
+
+    /**
+     * 新根据主体id加上单据详情（出库单场景）
+     * @param materialCurrentStocks
+     */
+    void addBatch(List<MaterialCurrentStock> materialCurrentStocks);
 
     /**
      * 根据商品详情查询
