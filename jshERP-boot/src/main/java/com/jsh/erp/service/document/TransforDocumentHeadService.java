@@ -7,15 +7,12 @@ import java.util.List;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.Supplier;
-import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.enumPackage.DocumentTypeEnum;
 import com.jsh.erp.datasource.enumPackage.PackageTypeEnum;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 import com.jsh.erp.datasource.vo.DocumentPrintVO;
-import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
@@ -24,11 +21,12 @@ import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service(value = "outDocumentHeadService")
-public class OutDocumentHeadService extends AbsDocumentHeadService implements InitializingBean {
+@Primary
+@Service(value = "transforDocumentHeadService")
+public class TransforDocumentHeadService extends AbsDocumentHeadService implements InitializingBean {
     @Autowired
     SupplierService supplierService;
     @Autowired
@@ -38,15 +36,17 @@ public class OutDocumentHeadService extends AbsDocumentHeadService implements In
     @Autowired
     ISequenceService sequenceService;
     @Autowired
+    LogService logService;
+    @Autowired
     UserService userService;
 
     public final static String SEQ_NAME = "document_number_seq";
 
-
     @Override
     public void afterPropertiesSet() throws Exception {
-        DocumentStrategyFactory.register(DocumentTypeEnum.OUT.getType(),this);
+        DocumentStrategyFactory.register(DocumentTypeEnum.TRANSFOR.getType(),this);
     }
+
 
     /**
      * 首字母缩写+客户号+日期+两位自增编号。
@@ -55,6 +55,7 @@ public class OutDocumentHeadService extends AbsDocumentHeadService implements In
      * @param date
      * @return
      */
+    @Override
     public String generatNumber(Long supplierId, LocalDate date){
         String dateStr = date.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         Integer maxCurentVal = sequenceService.getMaxCurrentValue(SEQ_NAME,date);
@@ -62,7 +63,7 @@ public class OutDocumentHeadService extends AbsDocumentHeadService implements In
         if(maxCurentVal<10){
             maxStr = "0"+maxCurentVal;
         }
-        return "OUT"+supplierId+dateStr+maxStr;
+        return "TF"+supplierId+dateStr+maxStr;
     }
 
     /**
