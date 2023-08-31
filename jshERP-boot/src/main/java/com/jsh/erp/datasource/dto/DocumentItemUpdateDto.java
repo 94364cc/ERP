@@ -12,8 +12,8 @@ public class DocumentItemUpdateDto {
     @ApiModelProperty(value = "商品id")
     private Long materialId;
 
-    @ApiModelProperty(value = "客户id")
-    private Long supplierId;
+    @ApiModelProperty(value = "headId")
+    private Long headId;
 
     @ApiModelProperty(value = "数量")
     private Integer operNumber;

@@ -143,7 +143,7 @@ public class DocumentHeadController {
      */
     @GetMapping(value = "/print")
     @ApiOperation(value = "打印单据")
-    public BaseResponseInfo print(@RequestParam("id") Long id,Integer type) {
+    public BaseResponseInfo print(@RequestParam("id") Long id,@RequestParam("type") Integer type) {
         IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(type);
         return BaseResponseInfo.data(documentHeadService.print(id));
     }

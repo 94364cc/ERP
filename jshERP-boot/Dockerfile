@@ -3,7 +3,7 @@ WORKDIR /app
 ENV JAR_FILE=/app/app.jar \
     JAR_OPTS="-Dloader.path=."
 
-COPY target/*.jar ./app.jar
+COPY ./*.jar ./app.jar
 COPY start.sh ./start.sh
 
 # start the script to run your application. Take note that there are several other optional environment variables supported

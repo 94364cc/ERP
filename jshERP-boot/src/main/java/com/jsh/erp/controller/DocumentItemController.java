@@ -4,8 +4,11 @@ import com.jsh.erp.datasource.dto.DocumentItemAddDto;
 import com.jsh.erp.datasource.dto.DocumentItemUpdateDto;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
+import com.jsh.erp.datasource.entities.DocumentItemFlow;
 import com.jsh.erp.datasource.page.DocumentHeadPage;
+import com.jsh.erp.service.document.DocumentItemStrategyFactory;
 import com.jsh.erp.service.document.DocumentStrategyFactory;
+import com.jsh.erp.service.document.InDocumentItemService;
 import com.jsh.erp.service.document.Interface.IDocumentHeadService;
 import com.jsh.erp.service.document.Interface.IDocumentItemService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -34,7 +37,6 @@ public class DocumentItemController {
 
     @Autowired
     IDocumentItemService documentItemService;
-
     /**
      * 新增制单详情
      * @param documentItemAddDto
@@ -44,6 +46,7 @@ public class DocumentItemController {
     @PostMapping(value = "/add")
     @ApiOperation(value = "新增制单详情")
     public BaseResponseInfo insert(@RequestBody DocumentItemAddDto documentItemAddDto) throws Exception{
+        IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(documentItemAddDto.getHeadId());
         documentItemService.add(documentItemAddDto);
         return BaseResponseInfo.success();
     }
@@ -57,6 +60,7 @@ public class DocumentItemController {
     @PostMapping(value = "/update")
     @ApiOperation(value = "修改制单详情")
     public BaseResponseInfo update(@RequestBody DocumentItemUpdateDto documentItemUpdateDto) throws Exception{
+        IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(documentItemUpdateDto.getHeadId());
         documentItemService.update(documentItemUpdateDto);
         return BaseResponseInfo.success();
     }
@@ -69,7 +73,8 @@ public class DocumentItemController {
      */
     @PostMapping(value = "/delete/{id}")
     @ApiOperation(value = "删除制单详情")
-    public BaseResponseInfo delete(@PathVariable Long id) throws Exception{
+    public BaseResponseInfo delete(@PathVariable Long id,@RequestParam Long headId) throws Exception{
+        IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(headId);
         documentItemService.delete(id);
         return BaseResponseInfo.success();
     }

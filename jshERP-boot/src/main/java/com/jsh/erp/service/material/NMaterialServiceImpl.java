@@ -184,7 +184,7 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
     }
 
     /**
-     * 根据ids查询map<id,name>
+     * 根据ids查询map<id,model>
      * @param ids
      * @return
      */
