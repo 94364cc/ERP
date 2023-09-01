@@ -77,7 +77,7 @@ public class DepotItemController {
     @Resource
     private MaterialService materialService;
 
-    @Autowired
+    @Resource
     private IDocumentItemService documentItemService;
 
     @Resource

@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-@Primary
 @Service(value = "transforDocumentHeadService")
 public class TransforDocumentHeadService extends AbsDocumentHeadService implements InitializingBean {
     @Autowired
