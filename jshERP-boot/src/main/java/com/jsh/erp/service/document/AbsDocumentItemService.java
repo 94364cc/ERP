@@ -67,7 +67,7 @@ public abstract class AbsDocumentItemService extends ServiceImpl<DocumentItemMap
             return documentItems;
         }
         List<Long> materialIds = documentItems.stream().map(DocumentItem::getMaterialId).collect(Collectors.toList());
-        Map<Long,String> materialMap = materialService.getMayByIds(materialIds);
+        Map<Long,Material> materialMap = materialService.getEntityMayByIds(materialIds);
 
         //仓库
         List<Long> depotIds = documentItems.stream().map(DocumentItem::getDepotId).collect(Collectors.toList());
@@ -79,7 +79,9 @@ public abstract class AbsDocumentItemService extends ServiceImpl<DocumentItemMap
         Map<Long,String> depotMap = depotService.getMapByIds(depotIds);
 
         for(DocumentItem documentItem : documentItems){
-            documentItem.setModel(materialMap.get(documentItem.getMaterialId()));
+            Material material = materialMap.get(documentItem.getMaterialId());
+            documentItem.setModel(material.getModel());
+            documentItem.setStandard(material.getStandard());
             documentItem.setDepotName(depotMap.get(documentItem.getDepotId()));
             documentItem.setAnotherDepotName(depotMap.get(documentItem.getAnotherDepotId()));
         }
@@ -98,7 +100,7 @@ public abstract class AbsDocumentItemService extends ServiceImpl<DocumentItemMap
         if(CollUtil.isEmpty(documentItems)){
             return documentItemPrintVOList;
         }
-        List<Long> materialIds = documentItems.stream().map(DocumentItem::getId).collect(Collectors.toList());
+        List<Long> materialIds = documentItems.stream().map(DocumentItem::getMaterialId).collect(Collectors.toList());
         Map<Long,Material> materialMap = materialService.getEntityMayByIds(materialIds);
 
         //仓库

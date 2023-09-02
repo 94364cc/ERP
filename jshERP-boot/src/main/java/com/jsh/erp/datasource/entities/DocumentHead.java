@@ -64,6 +64,26 @@ public class DocumentHead {
     @TableField(value = "tenant_id")
     private Long tenantId;
 
+    @ApiModelProperty(value = "巴恰费")
+    @TableField(value = "handling_fee")
+    private BigDecimal handlingFee;
+
+    @ApiModelProperty(value = "服务费")
+    @TableField(value = "server_fee")
+    private BigDecimal serverFee;
+
+    @ApiModelProperty(value = "车费")
+    @TableField(value = "car_fee")
+    private BigDecimal carFee;
+
+    @ApiModelProperty(value = "送货人")
+    @TableField(value = "sender")
+    private String sender;
+
+    @ApiModelProperty(value = "收货人")
+    @TableField(value = "receiver")
+    private String receiver;
+
     @ApiModelProperty(value = "删除标记，0未删除，1删除")
     @TableField(value = "delete_flag")
     private String deleteFlag;

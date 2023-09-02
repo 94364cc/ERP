@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -113,10 +114,11 @@ public class DocumentHeadController {
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/delete")
     @ApiOperation(value = "删除制单")
-    public BaseResponseInfo delete(@PathVariable("id") Long id,@RequestParam Integer type) throws Exception{
-        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(type);
+    public BaseResponseInfo delete(@RequestParam("id") Long id) throws Exception{
+        DocumentHead documentHead = documentHeadService.getById(id);
+        IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(documentHead.getType());
         documentHeadService.deleteDocumentHead(id);
         return BaseResponseInfo.success();
     }

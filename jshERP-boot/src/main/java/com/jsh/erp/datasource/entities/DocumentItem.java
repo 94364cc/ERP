@@ -32,6 +32,10 @@ public class DocumentItem {
     @TableField(exist = false)
     private String model;
 
+    @ApiModelProperty(value = "箱规")
+    @TableField(exist = false)
+    private String standard;
+
     @ApiModelProperty(value = "数量")
     @TableField(value = "oper_number")
     private Integer operNumber;

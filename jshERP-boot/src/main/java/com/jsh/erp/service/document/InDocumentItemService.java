@@ -139,7 +139,7 @@ public class InDocumentItemService extends AbsDocumentItemService implements Ini
     public void deleteByHeadId(Long headId){
         //查询单据主体
         DocumentHead documentHead = documentHeadService.getById(headId);
-        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.notNull(documentHead);
 
         //查询单据详情
         List<DocumentItem> documentItems = this.list(

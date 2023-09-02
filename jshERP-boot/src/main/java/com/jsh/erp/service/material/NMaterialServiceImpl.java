@@ -1,6 +1,7 @@
 package com.jsh.erp.service.material;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -201,6 +202,9 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
      */
     @Override
     public Map<Long, Material> getEntityMayByIds(List<Long> ids) {
+        if(CollUtil.isEmpty(ids)){
+            return new HashMap<>();
+        }
         List<Material> materialList = this.listByIds(ids);
         return materialList.stream().collect(Collectors.toMap(Material::getId, Function.identity()));
     }

@@ -125,7 +125,7 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
         //删除详情单子
         documentItemService.deleteByHeadId(id);
         //删除主体单子
-        this.deleteDocumentHead(id);
+        this.removeById(id);
     }
 
     @Override

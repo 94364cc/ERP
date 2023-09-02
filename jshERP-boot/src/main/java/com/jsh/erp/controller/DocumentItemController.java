@@ -6,6 +6,7 @@ import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.entities.DocumentItemFlow;
 import com.jsh.erp.datasource.page.DocumentHeadPage;
+import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.document.DocumentItemStrategyFactory;
 import com.jsh.erp.service.document.DocumentStrategyFactory;
 import com.jsh.erp.service.document.InDocumentItemService;
@@ -37,6 +38,8 @@ public class DocumentItemController {
 
     @Autowired
     IDocumentItemService documentItemService;
+    @Autowired
+    IDocumentHeadService documentheadService;
     /**
      * 新增制单详情
      * @param documentItemAddDto
@@ -73,8 +76,10 @@ public class DocumentItemController {
      */
     @PostMapping(value = "/delete/{id}")
     @ApiOperation(value = "删除制单详情")
-    public BaseResponseInfo delete(@PathVariable Long id,@RequestParam Long headId) throws Exception{
-        IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(headId);
+    public BaseResponseInfo delete(@PathVariable Long id) throws Exception{
+        DocumentHead documentHead = documentheadService.getById(id);
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.notNull(documentHead);
+        IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(documentHead.getId());
         documentItemService.delete(id);
         return BaseResponseInfo.success();
     }

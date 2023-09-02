@@ -39,7 +39,6 @@ public class Material {
     @TableField(value = "model")
     private String model;
 
-    @NotBlank(message = "箱规不能为空")
     @ApiModelProperty(value = "箱规，长*宽*高")
     @TableField(value = "standard")
     private String standard;

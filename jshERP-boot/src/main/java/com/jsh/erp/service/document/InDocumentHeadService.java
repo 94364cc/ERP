@@ -98,6 +98,7 @@ public class InDocumentHeadService extends AbsDocumentHeadService implements Ini
         }
         //根据单据id查询详情
         List<DocumentItemPrintVO> documentItemPrintVOList =documentItemService.printByHeadId(id);
+        documentPrintVO.setDocumentItemPrintVOList(documentItemPrintVOList);
         //汇总计算数量和立方数
         //如果是半包，不计算体积
         if(PackageTypeEnum.ALL.getType()==documentHead.getPackageType()){

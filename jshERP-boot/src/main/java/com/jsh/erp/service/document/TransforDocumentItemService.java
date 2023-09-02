@@ -28,7 +28,7 @@ public class TransforDocumentItemService extends AbsDocumentItemService implemen
     private final static String LOG_NAME = "调拨单详情";
     @Override
     public void afterPropertiesSet() throws Exception {
-        DocumentItemStrategyFactory.register(DocumentTypeEnum.IN.getType(),this);
+        DocumentItemStrategyFactory.register(DocumentTypeEnum.TRANSFOR.getType(),this);
     }
 
     /**
