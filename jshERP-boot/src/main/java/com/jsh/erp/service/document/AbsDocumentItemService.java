@@ -24,7 +24,6 @@ import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.entities.DocumentItemFlow;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
-import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.enumPackage.PackageTypeEnum;
 import com.jsh.erp.datasource.mappers.DocumentItemMapper;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;

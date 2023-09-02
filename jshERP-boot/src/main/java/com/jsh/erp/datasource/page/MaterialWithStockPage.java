@@ -15,7 +15,4 @@ public class MaterialWithStockPage extends Page<Material> {
 
         @ApiModelProperty(value = "商品id")
         private Long materialId;
-
-        @ApiModelProperty(value = "商品名称/款号")
-        private String queryParam;
 }

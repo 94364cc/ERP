@@ -7,11 +7,13 @@ import java.util.List;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
-import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
+import com.jsh.erp.datasource.entities.MaterialCurrentStockPage;
 import com.jsh.erp.datasource.mappers.NMaterialCurrentStockMapper;
+import com.jsh.erp.datasource.page.MaterialWithStockPage;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.material.Interface.INMaterialService;
@@ -156,8 +158,8 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
      * @return
      */
     @Override
-    public List<MaterialCurrentStock> getByExample(MaterialCurrentStockQuery query) {
-        return this.list(Wrappers.<MaterialCurrentStock>lambdaQuery()
+    public Page<MaterialCurrentStock> getPageByExample(MaterialCurrentStockPage query) {
+        return this.page(query,Wrappers.<MaterialCurrentStock>lambdaQuery()
             .eq(ObjectUtil.isNotNull(query.getSupplierId()),MaterialCurrentStock::getSupplierId,query.getSupplierId())
             .eq(ObjectUtil.isNotNull(query.getMaterialId()),MaterialCurrentStock::getMaterialId,query.getMaterialId())
             .eq(ObjectUtil.isNotNull(query.getDepotId()),MaterialCurrentStock::getDepotId,query.getDepotId())

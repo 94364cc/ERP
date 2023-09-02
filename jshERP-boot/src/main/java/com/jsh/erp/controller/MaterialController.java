@@ -73,8 +73,7 @@ public class MaterialController {
     @GetMapping(value = "/getListWithStock")
     @ApiOperation(value = "获取仓库下的商品")
     public BaseResponseInfo getListWithStock(MaterialWithStockPage materialWithStockPage) throws Exception{
-        nMaterialService.getPageWithStock(materialWithStockPage);
-        return BaseResponseInfo.success();
+        return BaseResponseInfo.data(nMaterialService.getPageWithStock(materialWithStockPage));
     }
 
     /**

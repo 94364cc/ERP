@@ -20,7 +20,6 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Area;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
-import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.mappers.AreaMapper;
 import com.jsh.erp.datasource.mappers.NMaterialMapper;
 import com.jsh.erp.datasource.page.MaterialPage;

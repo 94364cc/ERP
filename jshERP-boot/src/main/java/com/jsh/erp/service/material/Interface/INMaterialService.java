@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.datasource.page.MaterialWithStockPage;
+import com.jsh.erp.datasource.vo.MaterialCurrentStockVO;
 
 public interface INMaterialService extends IService<Material> {
 
@@ -29,7 +30,7 @@ public interface INMaterialService extends IService<Material> {
      * @param materialWithStockPage
      * @return
      */
-    Page<Material> getPageWithStock(MaterialWithStockPage materialWithStockPage);
+    Page<MaterialCurrentStockVO> getPageWithStock(MaterialWithStockPage materialWithStockPage);
     /**
      * 删除商品
      * @param id

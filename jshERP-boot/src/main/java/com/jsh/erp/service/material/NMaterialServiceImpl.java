@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -19,18 +20,22 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
-import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
+import com.jsh.erp.datasource.entities.MaterialCurrentStockPage;
+import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.NMaterialMapper;
 import com.jsh.erp.datasource.mappers.UnitMapper;
 import com.jsh.erp.datasource.page.MaterialPage;
 import com.jsh.erp.datasource.page.MaterialWithStockPage;
+import com.jsh.erp.datasource.vo.MaterialCurrentStockVO;
 import com.jsh.erp.exception.ResultEnum;
+import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.materialCategory.Interface.IMaterialCategoryService;
 import com.jsh.erp.service.materialCurrentStock.Interface.IMaterialCurrentStockService;
+import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.StringUtil;
 import org.apache.tomcat.util.buf.StringUtils;
@@ -53,9 +58,13 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
 
     @Autowired
     IMaterialCurrentStockService materialCurrentStockService;
+    @Autowired
+    DepotService depotService;
 
     @Autowired
     UnitService unitService;
+    @Autowired
+    SupplierService supplierService;
     /**
      * 添加商品
      * @param material
@@ -93,26 +102,40 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
      * @return
      */
     @Override
-    public Page<Material> getPageWithStock(MaterialWithStockPage materialWithStockPage) {
-        Page<Material> resultPage = new Page<>(materialWithStockPage.getCurrent(),materialWithStockPage.getSize());
+    public Page<MaterialCurrentStockVO> getPageWithStock(MaterialWithStockPage materialWithStockPage) {
+        Page<MaterialCurrentStockVO> resultPage = new Page<>(materialWithStockPage.getCurrent(),materialWithStockPage.getSize());
         //查询仓库下的商品
-        MaterialCurrentStockQuery materialCurrentStockQuery = new MaterialCurrentStockQuery();
+        MaterialCurrentStockPage materialCurrentStockQuery = new MaterialCurrentStockPage();
         BeanUtil.copyProperties(materialWithStockPage,materialCurrentStockQuery);
-        List<MaterialCurrentStock> materialCurrentStocks = materialCurrentStockService.getByExample(materialCurrentStockQuery);
+        Page<MaterialCurrentStock> materialCurrentStockPage = materialCurrentStockService.getPageByExample(materialCurrentStockQuery);
+
+        BeanUtil.copyProperties(materialCurrentStockPage,resultPage);
+        List<MaterialCurrentStock> materialCurrentStocks = materialCurrentStockPage.getRecords();
         if(CollUtil.isEmpty(materialCurrentStocks)){
             return resultPage;
         }
+        List<MaterialCurrentStockVO> materialCurrentStockVOS = CollUtil.newArrayList();
+
+        List<Long> materialIds = materialCurrentStocks.stream().map(MaterialCurrentStock::getMaterialId).collect(Collectors.toList());
+        Map<Long,String> materialMap = this.getMayByIds(materialIds);
+
+        List<Long> depotIds = materialCurrentStocks.stream().map(MaterialCurrentStock::getDepotId).collect(Collectors.toList());
+        Map<Long,String> depotMap = depotService.getMapByIds(depotIds);
+        for(MaterialCurrentStock materialCurrentStock : materialCurrentStocks){
+            MaterialCurrentStockVO materialCurrentStockVO =new MaterialCurrentStockVO();
+            materialCurrentStockVO.setMaterialName(materialMap.get(materialCurrentStock.getMaterialId()));
+            materialCurrentStockVO.setDepotName(depotMap.get(materialCurrentStock.getDepotId()));
+
+            Supplier supplier = supplierService.getSupplier(materialCurrentStock.getSupplierId());
+            if(ObjectUtil.isNotNull(supplier)){
+                materialCurrentStockVO.setSupplierName(supplier.getSupplier());
+            }
+            materialCurrentStockVO.setCurrentNumber(materialCurrentStock.getCurrentNumber());
+            materialCurrentStockVOS.add(materialCurrentStockVO);
+        }
+        resultPage.setRecords(materialCurrentStockVOS);
 
         //查询商品
-        List<Long> materialIds = materialCurrentStocks.stream().map(MaterialCurrentStock::getId).distinct().collect(Collectors.toList());
-        resultPage = this.page(materialWithStockPage,Wrappers.<Material>lambdaQuery()
-            .eq(Material::getId,materialIds)
-            .and(StrUtil.isNotBlank(materialWithStockPage.getQueryParam()),
-                wp->wp.eq(Material::getModel,materialWithStockPage.getQueryParam())
-                    .or().eq(Material::getName,materialWithStockPage.getQueryParam())
-            )
-        );
-
         return resultPage;
     }
 

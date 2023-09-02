@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class MaterialCurrentStockQuery {
+public class MaterialCurrentStockPage extends Page<MaterialCurrentStock> {
     @ApiModelProperty(value = "客户id")
     private Long supplierId;
 
