@@ -12,11 +12,13 @@ import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
 import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
 import com.jsh.erp.datasource.mappers.NMaterialCurrentStockMapper;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.ResultEnum;
 import com.jsh.erp.service.material.Interface.INMaterialService;
 import com.jsh.erp.service.materialCurrentStock.Interface.IMaterialCurrentStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurrentStockMapper, MaterialCurrentStock> implements
@@ -45,7 +47,9 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
     public void inUpdate(MaterialCurrentStock materialCurrentStock,Integer operNumber) {
         MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
         ResultEnum.MATERIAL_STOCK_NOT_EXISTS.notNull(query);
-        query.getCurrentNumber().subtract(new BigDecimal(operNumber)).add(materialCurrentStock.getCurrentNumber());
+        BigDecimal result = query.getCurrentNumber().subtract(new BigDecimal(operNumber)).add(materialCurrentStock.getCurrentNumber());
+        ResultEnum.OUT_DAYU_IN.isTrue(result.compareTo(new BigDecimal(0))>=0);
+        query.setCurrentNumber(result);
         this.updateById(query);
     }
 
@@ -58,7 +62,9 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
     public void outUpdate(MaterialCurrentStock materialCurrentStock, Integer oldOperNumber) {
         MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
         ResultEnum.MATERIAL_STOCK_NOT_EXISTS.notNull(query);
-        query.getCurrentNumber().add(new BigDecimal(oldOperNumber)).subtract(materialCurrentStock.getCurrentNumber());
+        BigDecimal result =query.getCurrentNumber().add(new BigDecimal(oldOperNumber)).subtract(materialCurrentStock.getCurrentNumber());
+        ResultEnum.OUT_DAYU_IN.isTrue(result.compareTo(new BigDecimal(0))>=0);
+        query.setCurrentNumber(result);
         this.updateById(query);
     }
 
@@ -70,7 +76,9 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
     public void delete(MaterialCurrentStock materialCurrentStock) {
         MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
         ResultEnum.MATERIAL_STOCK_NOT_EXISTS.notNull(query);
-        query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
+        BigDecimal result = query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
+        ResultEnum.OUT_DAYU_IN.isTrue(result.compareTo(new BigDecimal(0))>=0);
+        query.setCurrentNumber(result);
         this.updateById(query);
     }
 
@@ -86,7 +94,10 @@ public class MaterialCurrentStockServiceImpl extends ServiceImpl<NMaterialCurren
         List<MaterialCurrentStock> updateList = new ArrayList<>();
         for(MaterialCurrentStock materialCurrentStock : materialCurrentStocks){
             MaterialCurrentStock query = this.getByMaterialId(materialCurrentStock.getDepotId(),materialCurrentStock.getMaterialId(),materialCurrentStock.getSupplierId());
-            query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
+            ResultEnum.MATERIAL_STOCK_NOT_EXISTS.notNull(query);
+            BigDecimal result = query.getCurrentNumber().subtract(materialCurrentStock.getCurrentNumber());
+            ResultEnum.OUT_DAYU_IN.isTrue(result.compareTo(new BigDecimal(0))>=0);
+            query.setCurrentNumber(result);
             updateList.add(query);
         }
         this.updateBatchById(updateList);

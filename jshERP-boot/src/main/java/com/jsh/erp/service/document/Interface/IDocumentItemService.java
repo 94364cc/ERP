@@ -44,7 +44,7 @@ public interface IDocumentItemService extends IService<DocumentItem> {
      * 根据主体id获取详情列表
      * @param headId
      */
-    List<DocumentItem> getByHeadId(Long headId) throws Exception;
+    List<DocumentItem> getByHeadId(Long headId);
 
 
     /**

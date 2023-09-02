@@ -60,6 +60,7 @@ public class DocumentHeadController {
         documentHeadPage.setEndDate(endTime);
         documentHeadPage.setSupplierId(supplierId);
         documentHeadPage.setNumber(number);
+        documentHeadPage.setType(type);
         IDocumentHeadService documentHeadService = DocumentStrategyFactory.getByType(Integer.parseInt(type));
         return BaseResponseInfo.data(documentHeadService.getPage(documentHeadPage));
     }

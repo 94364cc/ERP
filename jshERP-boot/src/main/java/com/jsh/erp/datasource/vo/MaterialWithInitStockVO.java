@@ -1,6 +1,5 @@
 package com.jsh.erp.datasource.vo;
 
-import javax.validation.constraints.NotBlank;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.jsh.erp.datasource.entities.Material;

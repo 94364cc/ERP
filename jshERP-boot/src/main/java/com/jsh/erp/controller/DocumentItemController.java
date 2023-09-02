@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,7 @@ public class DocumentItemController {
      */
     @PostMapping(value = "/add")
     @ApiOperation(value = "新增制单详情")
+    @Transactional(rollbackFor = Exception.class)
     public BaseResponseInfo insert(@RequestBody DocumentItemAddDto documentItemAddDto) throws Exception{
         IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(documentItemAddDto.getHeadId());
         documentItemService.add(documentItemAddDto);
@@ -62,6 +64,7 @@ public class DocumentItemController {
      */
     @PostMapping(value = "/update")
     @ApiOperation(value = "修改制单详情")
+    @Transactional(rollbackFor = Exception.class)
     public BaseResponseInfo update(@RequestBody DocumentItemUpdateDto documentItemUpdateDto) throws Exception{
         IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(documentItemUpdateDto.getHeadId());
         documentItemService.update(documentItemUpdateDto);
@@ -76,10 +79,11 @@ public class DocumentItemController {
      */
     @PostMapping(value = "/delete/{id}")
     @ApiOperation(value = "删除制单详情")
+    @Transactional(rollbackFor = Exception.class)
     public BaseResponseInfo delete(@PathVariable Long id) throws Exception{
-        DocumentHead documentHead = documentheadService.getById(id);
-        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.notNull(documentHead);
-        IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(documentHead.getId());
+        DocumentItem documentItem = documentItemService.getById(id);
+        ResultEnum.DOCUMENT_ITEM_NOT_EXISTS.notNull(documentItem);
+        IDocumentItemService documentItemService = DocumentItemStrategyFactory.getByType(documentItem.getHeadId());
         documentItemService.delete(id);
         return BaseResponseInfo.success();
     }

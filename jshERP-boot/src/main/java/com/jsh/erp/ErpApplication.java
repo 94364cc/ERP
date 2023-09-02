@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 @MapperScan("com.jsh.erp.datasource.mappers")
 @ServletComponentScan
 @EnableScheduling
+@EnableTransactionManagement
 public class ErpApplication{
     public static void main(String[] args) throws IOException {
         ConfigurableApplicationContext context = SpringApplication.run(ErpApplication.class, args);

@@ -17,6 +17,9 @@ public class Depot {
     @ApiModelProperty(value = "地址")
     private String address;
 
+    @ApiModelProperty(value = "区域")
+    private String area;
+
     @ApiModelProperty(value = "仓储费")
     private BigDecimal warehousing;
 

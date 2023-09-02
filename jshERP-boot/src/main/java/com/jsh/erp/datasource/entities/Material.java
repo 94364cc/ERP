@@ -2,7 +2,6 @@ package com.jsh.erp.datasource.entities;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotBlank;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;

@@ -25,6 +25,7 @@ import com.jsh.erp.datasource.entities.DocumentItemFlow;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
 import com.jsh.erp.datasource.entities.MaterialCurrentStockQuery;
+import com.jsh.erp.datasource.enumPackage.PackageTypeEnum;
 import com.jsh.erp.datasource.mappers.DocumentItemMapper;
 import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
 import com.jsh.erp.exception.ResultEnum;
@@ -61,11 +62,12 @@ public abstract class AbsDocumentItemService extends ServiceImpl<DocumentItemMap
      * @return
      */
     @Override
-    public List<DocumentItem> getByHeadId(Long headId) throws Exception {
+    public List<DocumentItem> getByHeadId(Long headId) {
         List<DocumentItem> documentItems =  this.list(Wrappers.<DocumentItem>lambdaQuery().eq(DocumentItem::getHeadId,headId));
         if(CollUtil.isEmpty(documentItems)){
             return documentItems;
         }
+        DocumentHead documentHead = documentHeadService.getById(headId);
         List<Long> materialIds = documentItems.stream().map(DocumentItem::getMaterialId).collect(Collectors.toList());
         Map<Long,Material> materialMap = materialService.getEntityMayByIds(materialIds);
 
@@ -81,7 +83,9 @@ public abstract class AbsDocumentItemService extends ServiceImpl<DocumentItemMap
         for(DocumentItem documentItem : documentItems){
             Material material = materialMap.get(documentItem.getMaterialId());
             documentItem.setModel(material.getModel());
-            documentItem.setStandard(material.getStandard());
+            if(ObjectUtil.isNotNull(documentHead.getPackageType()) && PackageTypeEnum.ALL.getType()==documentHead.getPackageType()){
+                documentItem.setStandard(material.getStandard());
+            }
             documentItem.setDepotName(depotMap.get(documentItem.getDepotId()));
             documentItem.setAnotherDepotName(depotMap.get(documentItem.getAnotherDepotId()));
         }

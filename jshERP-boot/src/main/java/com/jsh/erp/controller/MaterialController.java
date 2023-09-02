@@ -3,7 +3,6 @@ package com.jsh.erp.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -48,7 +47,7 @@ public class MaterialController {
      */
     @PostMapping(value = "/add")
     @ApiOperation(value = "添加商品")
-    public BaseResponseInfo add(@Valid @RequestBody Material material) throws Exception{
+    public BaseResponseInfo add(@RequestBody Material material) throws Exception{
         nMaterialService.insertMaterial(material);
         return BaseResponseInfo.success();
     }

@@ -52,6 +52,7 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
         Page<DocumentHeadPageVO> documentHeadVoPage = new Page<>(documentHeadPage.getCurrent(),documentHeadPage.getSize());
         Page<DocumentHead> page =  this.page(documentHeadPage,Wrappers.<DocumentHead>lambdaQuery()
             .eq(ObjectUtil.isNotNull(documentHeadPage.getSupplierId()),DocumentHead::getSupplierId,documentHeadPage.getSupplierId())
+            .eq(DocumentHead::getType,documentHeadPage.getType())
             .eq(ObjectUtil.isNotNull(documentHeadPage.getNumber()),DocumentHead::getNumber,documentHeadPage.getNumber())
             .ge(ObjectUtil.isNotNull(documentHeadPage.getBeginDate()),DocumentHead::getCreateTime,documentHeadPage.getBeginDate())
             .le(ObjectUtil.isNotNull(documentHeadPage.getEndDate()),DocumentHead::getCreateTime,documentHeadPage.getEndDate())
@@ -151,9 +152,9 @@ public abstract class AbsDocumentHeadService extends ServiceImpl<DocumentHeadMap
     @Override
     public Long getSupplierIdByItemId(Long itemId) {
         DocumentItem documentItem = documentItemService.getById(itemId);
-        ResultEnum.DOCUMENT_ITEM_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentItem));
+        ResultEnum.DOCUMENT_ITEM_NOT_EXISTS.isTrue(ObjectUtil.isNotNull(documentItem));
         DocumentHead documentHead = this.getById(documentItem.getHeadId());
-        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNotNull(documentHead));
         return documentHead.getSupplierId();
     }
 

@@ -35,7 +35,6 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
      * 新增
      * @param documentItemAddDto
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(DocumentItemAddDto documentItemAddDto){
         DocumentItem documentItem = new DocumentItem();
@@ -45,7 +44,7 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
 
         //获取客户
         DocumentHead documentHead =documentHeadService.getById(documentItemAddDto.getHeadId());
-        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNotNull(documentHead));
 
         //更新仓库货物
         MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
@@ -128,7 +127,7 @@ public class OutDocumentItemService extends AbsDocumentItemService implements In
     public void deleteByHeadId(Long headId){
         //查询单据主体
         DocumentHead documentHead = documentHeadService.getById(headId);
-        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNotNull(documentHead));
 
         //查询单据详情
         List<DocumentItem> documentItems = this.list(

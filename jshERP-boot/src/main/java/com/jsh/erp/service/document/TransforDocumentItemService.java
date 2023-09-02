@@ -150,7 +150,7 @@ public class TransforDocumentItemService extends AbsDocumentItemService implemen
     public void deleteByHeadId(Long headId){
         //查询单据主体
         DocumentHead documentHead = documentHeadService.getById(headId);
-        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNull(documentHead));
+        ResultEnum.DOCUMENT_HEAD_NOT_EXISTS.isTrue(ObjectUtil.isNotNull(documentHead));
 
         //查询单据详情
         List<DocumentItem> documentItems = this.list(

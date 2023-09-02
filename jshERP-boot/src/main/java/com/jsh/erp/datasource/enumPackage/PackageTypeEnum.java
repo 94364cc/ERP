@@ -12,8 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PackageTypeEnum {
 
-    HALF(1, "半托"),
-    ALL(2, "全托"),
+    ALL(1, "全托"),
+    HALF(2, "半托"),
     ;
     final int type;
     final String name;

@@ -132,6 +132,9 @@
       <if test="address != null">
         address,
       </if>
+      <if test="area != null">
+        area,
+      </if>
       <if test="warehousing != null">
         warehousing,
       </if>
@@ -160,6 +163,9 @@
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
       </if>
       <if test="warehousing != null">
         #{warehousing,jdbcType=DECIMAL},
@@ -264,6 +270,9 @@
       </if>
       <if test="warehousing != null">
         warehousing = #{warehousing,jdbcType=DECIMAL},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
       </if>
       <if test="sort != null">
         sort = #{sort,jdbcType=VARCHAR},

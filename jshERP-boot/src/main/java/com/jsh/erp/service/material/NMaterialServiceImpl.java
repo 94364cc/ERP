@@ -216,10 +216,12 @@ public class NMaterialServiceImpl extends ServiceImpl<NMaterialMapper, Material>
     private void validRepeat(Material material) {
         //校验箱体规格
         String standard = material.getStandard();
-        String[] numbers = standard.split("\\*");
-        ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(numbers.length==3);
-        for(String number : numbers){
-            ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(pattern.matcher(number).matches());
+        if(StrUtil.isNotBlank(standard)){
+            String[] numbers = standard.split("\\*");
+            ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(numbers.length==3);
+            for(String number : numbers){
+                ResultEnum.MATERIAL_STANDARD_ERROR.isTrue(pattern.matcher(number).matches());
+            }
         }
 
         boolean repeatFlag = false;
