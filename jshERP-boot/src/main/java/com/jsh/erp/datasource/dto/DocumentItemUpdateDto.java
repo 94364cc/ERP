@@ -15,6 +15,9 @@ public class DocumentItemUpdateDto {
     @ApiModelProperty(value = "headId")
     private Long headId;
 
+    @ApiModelProperty(value = "调整方式 1-新增 2-减少")
+    private Integer changeType;
+
     @ApiModelProperty(value = "数量")
     private Integer operNumber;
 

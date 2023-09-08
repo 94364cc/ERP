@@ -13,6 +13,9 @@ public class DocumentItemAddDto {
     @ApiModelProperty(value = "商品id")
     private Long materialId;
 
+    @ApiModelProperty(value = "调整方式 1-新增 2-减少")
+    private Integer changeType;
+
     @ApiModelProperty(value = "客户id")
     private Long supplierId;
 

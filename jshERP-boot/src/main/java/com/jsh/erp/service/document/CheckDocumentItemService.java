@@ -1,15 +1,12 @@
 package com.jsh.erp.service.document;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.dto.DocumentItemAddDto;
@@ -17,32 +14,21 @@ import com.jsh.erp.datasource.dto.DocumentItemUpdateDto;
 import com.jsh.erp.datasource.entities.DocumentHead;
 import com.jsh.erp.datasource.entities.DocumentItem;
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
-import com.jsh.erp.datasource.entities.Supplier;
+import com.jsh.erp.datasource.enumPackage.ChangeTypeTypeEnum;
 import com.jsh.erp.datasource.enumPackage.DocumentTypeEnum;
-import com.jsh.erp.datasource.enumPackage.PackageTypeEnum;
-import com.jsh.erp.datasource.vo.DocumentItemPrintVO;
-import com.jsh.erp.datasource.vo.DocumentPrintVO;
 import com.jsh.erp.exception.ResultEnum;
-import com.jsh.erp.service.depot.DepotService;
-import com.jsh.erp.service.log.LogService;
-import com.jsh.erp.service.material.MaterialService;
-import com.jsh.erp.service.sequence.ISequenceService;
-import com.jsh.erp.service.supplier.SupplierService;
-import com.jsh.erp.service.user.UserService;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Primary
 @Service
-public class InDocumentItemService extends AbsDocumentItemService implements InitializingBean {
+public class CheckDocumentItemService extends AbsDocumentItemService implements InitializingBean {
 
-    private final static String LOG_NAME = "入库单详情";
+    private final static String LOG_NAME = "库存盘点单详情";
     @Override
     public void afterPropertiesSet() throws Exception {
-        DocumentItemStrategyFactory.register(DocumentTypeEnum.IN.getType(),this);
+        DocumentItemStrategyFactory.register(DocumentTypeEnum.CHECK.getType(),this);
     }
 
     /**
@@ -64,7 +50,11 @@ public class InDocumentItemService extends AbsDocumentItemService implements Ini
         materialCurrentStock.setMaterialId(documentItem.getMaterialId());
         materialCurrentStock.setDepotId(documentItem.getDepotId());
         materialCurrentStock.setSupplierId(documentHead.getSupplierId());
-        materialCurrentStockService.add(materialCurrentStock);
+        if(ChangeTypeTypeEnum.ADD.getType()==documentItemAddDto.getChangeType()){
+            materialCurrentStockService.add(materialCurrentStock);
+        }else{
+            materialCurrentStockService.delete(materialCurrentStock);
+        }
 
         //记录日志
         StringBuffer sb = new StringBuffer();
@@ -91,7 +81,12 @@ public class InDocumentItemService extends AbsDocumentItemService implements Ini
             materialCurrentStock.setMaterialId(documentItem.getMaterialId());
             materialCurrentStock.setDepotId(documentItem.getDepotId());
             materialCurrentStock.setSupplierId(documentHead.getSupplierId());
-            materialCurrentStockService.inUpdate(materialCurrentStock,old.getOperNumber());
+            if(ChangeTypeTypeEnum.ADD.getType()==documentItemUpdateDto.getChangeType()){
+                materialCurrentStockService.inUpdate(materialCurrentStock,old.getOperNumber());
+            }else{
+                materialCurrentStockService.outUpdate(materialCurrentStock,old.getOperNumber());
+            }
+
         }
         this.updateById(documentItem);
 
@@ -119,7 +114,11 @@ public class InDocumentItemService extends AbsDocumentItemService implements Ini
         materialCurrentStock.setMaterialId(documentItem.getMaterialId());
         materialCurrentStock.setDepotId(documentItem.getDepotId());
         materialCurrentStock.setSupplierId(supplierId);
-        materialCurrentStockService.delete(materialCurrentStock);
+        if(ChangeTypeTypeEnum.ADD.getType()==documentItem.getChangeType()){
+            materialCurrentStockService.delete(materialCurrentStock);
+        }else{
+            materialCurrentStockService.add(materialCurrentStock);
+        }
         //删除单据详情
         this.removeById(id);
 
@@ -149,16 +148,18 @@ public class InDocumentItemService extends AbsDocumentItemService implements Ini
         }
         List<Long> documentItemIds = documentItems.stream().map(DocumentItem::getId).collect(Collectors.toList());
         //库存减去
-        List<MaterialCurrentStock> materialCurrentStocks = new ArrayList<>();
         for(DocumentItem documentItem : documentItems){
             MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
             materialCurrentStock.setCurrentNumber(new BigDecimal(documentItem.getOperNumber()));
             materialCurrentStock.setMaterialId(documentItem.getMaterialId());
             materialCurrentStock.setDepotId(documentItem.getDepotId());
             materialCurrentStock.setSupplierId(documentHead.getSupplierId());
-            materialCurrentStocks.add(materialCurrentStock);
+            if(ChangeTypeTypeEnum.ADD.getType()==documentItem.getChangeType()){
+                materialCurrentStockService.delete(materialCurrentStock);
+            }else{
+                materialCurrentStockService.add(materialCurrentStock);
+            }
         }
-        materialCurrentStockService.deleteBatch(materialCurrentStocks);
         //删除单据详情
         this.removeByIds(documentItemIds);
     }

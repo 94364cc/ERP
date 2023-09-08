@@ -32,6 +32,10 @@ public class DocumentItem {
     @TableField(exist = false)
     private String model;
 
+    @ApiModelProperty(value = "调整方式 1-新增 2-减少")
+    @TableField(value = "change_type")
+    private Integer changeType;
+
     @ApiModelProperty(value = "箱规")
     @TableField(exist = false)
     private String standard;
